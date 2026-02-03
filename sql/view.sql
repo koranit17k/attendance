@@ -113,7 +113,8 @@ select if(
             or `v`.`night` is not null
             or `v`.`early` is not null
         ),
-        'green_case',
+        '1',
+        -- green
         if(
             (
                 `v`.`lunch_out` is not null
@@ -125,8 +126,9 @@ select if(
                 and `v`.`night` is null
                 and `v`.`early` is null
             ),
-            'yellow_case',
-            'red_case'
+            '2',
+            -- yellow
+            '3' -- red
         )
     ) AS `status`,
     `v`.`dateAt` AS `dateAt`,

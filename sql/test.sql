@@ -1,4 +1,6 @@
 select a.status,
+    e.name as employee_name,
+    c.name as company_name,
     a.scanCode,
     a.dateAt,
     a.day_case,
@@ -120,4 +122,7 @@ select a.status,
         ELSE 0
     END AS ot_total_minutes
 from vAttendance a
-limit 10;
+    left join employee e on a.scanCode = e.scanCode
+    left join company c on e.comCode = c.comCode
+where dateAt = '2025-12-01'
+limit 100;
