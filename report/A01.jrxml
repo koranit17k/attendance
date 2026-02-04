@@ -124,13 +124,16 @@ limit 200
 		<expression><![CDATA[$F{scanCode}]]></expression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
-	<variable name="companyName" resetType="Group" incrementType="Report" resetGroup="company_group" class="java.lang.String">
-		<expression><![CDATA[$F{company_name}]]></expression>
-	</variable>
 	<group name="statusgroup">
 		<expression><![CDATA[$F{status}]]></expression>
 		<groupHeader>
-			<band height="36"/>
+			<band height="36">
+				<element kind="staticText" uuid="9b6ce785-e2be-4148-b35c-418b04d0037a" x="10" y="6" width="55" height="20" fontName="Sarabun Thin" fontSize="10.0" hTextAlign="Center" vTextAlign="Top">
+					<text><![CDATA[สถานะ]]></text>
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3f10d705-8e61-48d5-9e4f-6e6da8e8cb9f"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</element>
+			</band>
 		</groupHeader>
 		<groupFooter>
 			<band height="25">
@@ -153,21 +156,6 @@ limit 200
 					<text><![CDATA[รวม]]></text>
 				</element>
 			</band>
-		</groupFooter>
-	</group>
-	<group name="company_group">
-		<expression><![CDATA[$F{company_name}]]></expression>
-		<groupHeader>
-			<band height="52">
-				<element kind="staticText" uuid="9b6ce785-e2be-4148-b35c-418b04d0037a" x="0" y="0" width="55" height="20" fontName="Sarabun Thin" fontSize="10.0" hTextAlign="Center" vTextAlign="Top">
-					<text><![CDATA[สถานะ]]></text>
-					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="3f10d705-8e61-48d5-9e4f-6e6da8e8cb9f"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</element>
-			</band>
-		</groupHeader>
-		<groupFooter>
-			<band height="50"/>
 		</groupFooter>
 	</group>
 	<background splitType="Stretch"/>
