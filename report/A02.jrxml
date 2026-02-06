@@ -1,0 +1,243 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="สรุปประจำเดือน" language="java" columnCount="1" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="27e5c3a4-33da-4220-aa35-ee1ff2660017">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="payroll"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="646"/>
+	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="354"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Crosstab_CH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CG" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CT" mode="Opaque" backcolor="#005FB3">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<query language="SQL"><![CDATA[SELECT *
+FROM vAttendanceMinutes
+where dateAt between "2025-11-01" and "2025-11-15"
+]]></query>
+	<field name="status" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="status"/>
+		<property name="com.jaspersoft.studio.field.label" value="status"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="comcode" class="java.lang.String">
+		<description><![CDATA[รหัสบริษัท]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="comcode"/>
+		<property name="com.jaspersoft.studio.field.label" value="comcode"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="employee_name" class="java.lang.String">
+		<description><![CDATA[ชื่อจริง]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="employee_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="employee_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="company_name" class="java.lang.String">
+		<description><![CDATA[บริษัท ชื่อ]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="company_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="company_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="scanCode" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="scanCode"/>
+		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="dateAt" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="dateAt"/>
+		<property name="com.jaspersoft.studio.field.label" value="dateAt"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="day_case" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="day_case"/>
+		<property name="com.jaspersoft.studio.field.label" value="day_case"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="lunch_case" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lunch_case"/>
+		<property name="com.jaspersoft.studio.field.label" value="lunch_case"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="night_case" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="night_case"/>
+		<property name="com.jaspersoft.studio.field.label" value="night_case"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="early" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="early"/>
+		<property name="com.jaspersoft.studio.field.label" value="early"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="morning" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="morning"/>
+		<property name="com.jaspersoft.studio.field.label" value="morning"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="lunch_out" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lunch_out"/>
+		<property name="com.jaspersoft.studio.field.label" value="lunch_out"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="lunch_in" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lunch_in"/>
+		<property name="com.jaspersoft.studio.field.label" value="lunch_in"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="evening" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="evening"/>
+		<property name="com.jaspersoft.studio.field.label" value="evening"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="night" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="night"/>
+		<property name="com.jaspersoft.studio.field.label" value="night"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="lunch_minutes" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="lunch_minutes"/>
+		<property name="com.jaspersoft.studio.field.label" value="lunch_minutes"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="late_morning_minutes" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="late_morning_minutes"/>
+		<property name="com.jaspersoft.studio.field.label" value="late_morning_minutes"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="late_lunch_minutes" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="late_lunch_minutes"/>
+		<property name="com.jaspersoft.studio.field.label" value="late_lunch_minutes"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="work_minutes" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="work_minutes"/>
+		<property name="com.jaspersoft.studio.field.label" value="work_minutes"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="ot_total_minutes" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="ot_total_minutes"/>
+		<property name="com.jaspersoft.studio.field.label" value="ot_total_minutes"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<variable name="Variable_1" class="java.lang.String"/>
+	<background splitType="Stretch"/>
+	<title height="57" splitType="Stretch">
+		<element kind="textField" uuid="77f91706-70bb-46b1-8780-b1005ee9bd10" x="290" y="0" width="178" height="34" fontName="Sarabun Thin" fontSize="12.0" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[$P{JASPER_REPORT}.getName()]]></expression>
+		</element>
+	</title>
+	<pageHeader height="35" splitType="Stretch"/>
+	<summary height="79" splitType="Stretch">
+		<element kind="crosstab" uuid="9d21045b-ee8e-40bc-bbed-cee81719a6f0" positionType="Float" stretchType="ContainerHeight" x="1" y="0" width="790" height="70">
+			<dataset/>
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+			<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
+			<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
+			<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
+			<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
+			<rowGroup name="employee_name" totalPosition="End" width="50">
+				<bucket class="java.lang.String">
+					<expression><![CDATA[$F{employee_name}]]></expression>
+				</bucket>
+				<header mode="Opaque" style="Crosstab_CH">
+					<element kind="textField" uuid="9e979f80-6c75-4a5c-a825-d395534ba1be" x="0" y="0" width="50" height="20" fontName="Sarabun Thin" fontSize="9.0" blankWhenNull="false" hTextAlign="Right">
+						<expression><![CDATA[$V{employee_name}]]></expression>
+					</element>
+				</header>
+				<totalHeader mode="Opaque" style="Crosstab_CT"/>
+			</rowGroup>
+			<columnGroup name="dateAt" totalPosition="End" height="13">
+				<bucket class="java.lang.String">
+					<expression><![CDATA[$F{dateAt}]]></expression>
+				</bucket>
+				<header mode="Opaque" style="Crosstab_CH">
+					<element kind="textField" uuid="125444d2-f881-4e36-9743-282fa2e25fb9" x="0" y="0" width="24" height="13" fontName="Sarabun Thin" fontSize="8.0" hTextAlign="Right">
+						<expression><![CDATA[$V{dateAt}.substring(8,10)
+]]></expression>
+					</element>
+				</header>
+				<totalHeader mode="Opaque" style="Crosstab_CT"/>
+			</columnGroup>
+			<measure name="work_minutes_MEASURE" class="java.math.BigDecimal">
+				<expression><![CDATA[$F{work_minutes}]]></expression>
+			</measure>
+			<measure name="late_morning_MEAS" calculation="Sum" class="java.lang.Integer">
+				<expression><![CDATA[$F{late_morning_minutes}
+]]></expression>
+			</measure>
+			<measure name="late_lunch_MEAS" calculation="Sum" class="java.lang.Integer">
+				<expression><![CDATA[$F{late_lunch_minutes}
+]]></expression>
+			</measure>
+			<cell width="24" height="20">
+				<contents mode="Opaque" style="Crosstab_CD">
+					<element kind="textField" uuid="95a09208-dfc5-4fd2-98ec-438ae9c29059" x="0" y="0" width="24" height="20" fontName="Sarabun Thin" fontSize="6.0" pattern="#,##0.###;(#,##0.###-)" blankWhenNull="false" hTextAlign="Right">
+						<expression><![CDATA[(
+  ($V{late_morning_MEAS} == null || $V{late_morning_MEAS} == 0)
+  && ($V{late_lunch_MEAS} == null || $V{late_lunch_MEAS} == 0)
+)
+? ""
+:
+(
+  ($V{late_morning_MEAS} == null || $V{late_morning_MEAS} == 0 ? "" : $V{late_morning_MEAS})
+  + " / " +
+  ($V{late_lunch_MEAS} == null || $V{late_lunch_MEAS} == 0 ? "" : $V{late_lunch_MEAS})
+)
+]]></expression>
+						<box rightPadding="4"/>
+					</element>
+				</contents>
+			</cell>
+			<cell width="10" height="20" columnTotalGroup="dateAt">
+				<contents mode="Opaque" style="Crosstab_CT"/>
+			</cell>
+			<cell width="24" height="17" rowTotalGroup="employee_name">
+				<contents mode="Opaque" style="Crosstab_CT">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</contents>
+			</cell>
+			<cell width="10" height="17" rowTotalGroup="employee_name" columnTotalGroup="dateAt">
+				<contents mode="Opaque" style="Crosstab_CT">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+				</contents>
+			</cell>
+		</element>
+	</summary>
+</jasperReport>

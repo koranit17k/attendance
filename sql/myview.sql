@@ -125,5 +125,7 @@ select a.status,
         ELSE 0
     END AS ot_total_minutes
 from vAttendance a
-    left join employee e on a.scanCode = e.scanCode
+--     left join employee e on a.scanCode = e.scanCode
+--     left join company c on e.comCode = c.comCode;
+    left join scancode e on a.scanCode = e.scanCode
     left join company c on e.comCode = c.comCode;

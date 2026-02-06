@@ -10,32 +10,24 @@
 		<defaultValueExpression><![CDATA[new java.text.SimpleDateFormat("yyyy-MM-dd").parse("2025-12-01")
 ]]></defaultValueExpression>
 	</parameter>
-	<query language="SQL"><![CDATA[SELECT *
-FROM vAttendanceMinutes 
-WHERE scancode= scancode and dateAt = $P{startDate}
-ORDER BY comCode, scancode
+	<query language="SQL"><![CDATA[SELECT v.*,
+    e.comCode as ecom,
+    c.comCode as ccom,
+    e.name as employee_name,
+    c.comName as company_name,
+    s.name as scanName
+FROM vAttendanceMinutes v
+    left join scancode s on v.scanCode = s.scanCode
+    left join employee e on v.scanCode = e.scanCode
+    left  join company c on e.comCode = c.comCode
+WHERE  dateAt = $P{startDate}
+ORDER BY ecom, scancode
 limit 200
 ]]></query>
 	<field name="status" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="status"/>
 		<property name="com.jaspersoft.studio.field.label" value="status"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
-	</field>
-	<field name="comcode" class="java.lang.String">
-		<description><![CDATA[รหัสบริษัท]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="comcode"/>
-		<property name="com.jaspersoft.studio.field.label" value="comcode"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="employee_name" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="employee_name"/>
-		<property name="com.jaspersoft.studio.field.label" value="employee_name"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
-	</field>
-	<field name="company_name" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="company_name"/>
-		<property name="com.jaspersoft.studio.field.label" value="company_name"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
 	</field>
 	<field name="scanCode" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="scanCode"/>
@@ -117,6 +109,31 @@ limit 200
 		<property name="com.jaspersoft.studio.field.label" value="ot_total_minutes"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
 	</field>
+	<field name="ecom" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="comCode"/>
+		<property name="com.jaspersoft.studio.field.label" value="ecom"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+	</field>
+	<field name="ccom" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="comCode"/>
+		<property name="com.jaspersoft.studio.field.label" value="ccom"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
+	</field>
+	<field name="employee_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="name"/>
+		<property name="com.jaspersoft.studio.field.label" value="employee_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+	</field>
+	<field name="company_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="comName"/>
+		<property name="com.jaspersoft.studio.field.label" value="company_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
+	</field>
+	<field name="scanName" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="name"/>
+		<property name="com.jaspersoft.studio.field.label" value="scanName"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="scancode"/>
+	</field>
 	<variable name="totalCount" calculation="Count" class="java.lang.Integer">
 		<expression><![CDATA[$F{scanCode}]]></expression>
 	</variable>
@@ -137,7 +154,7 @@ limit 200
 ]]></expression>
 	</variable>
 	<group name="companyName">
-		<expression><![CDATA[$F{comcode}]]></expression>
+		<expression><![CDATA[$F{ccom}]]></expression>
 		<groupHeader>
 			<band height="20">
 				<element kind="textField" uuid="344b43da-5994-4f6f-a75d-3f435d029c3c" x="0" y="0" width="168" height="20" fontName="Sarabun Thin" blankWhenNull="true" vTextAlign="Middle">
@@ -221,17 +238,17 @@ limit 200
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<box leftPadding="5"/>
 		</element>
-		<element kind="staticText" uuid="bbddf72c-f894-4025-8333-018aa0794801" x="214" y="0" width="60" height="15" fontName="Sarabun Thin" fontSize="10.0" hTextAlign="Center" vTextAlign="Bottom">
+		<element kind="staticText" uuid="bbddf72c-f894-4025-8333-018aa0794801" x="261" y="0" width="60" height="15" fontName="Sarabun Thin" fontSize="10.0" hTextAlign="Center" vTextAlign="Bottom">
 			<text><![CDATA[เวลาเข้า-ออก]]></text>
 			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d751f7cf-8a69-48fa-b4e2-72da6ea89acd"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
-		<element kind="staticText" uuid="71023367-04b7-465c-a045-788fbfb8f352" x="274" y="0" width="73" height="15" fontName="Sarabun Thin" fontSize="10.0" hTextAlign="Center" vTextAlign="Bottom">
+		<element kind="staticText" uuid="71023367-04b7-465c-a045-788fbfb8f352" x="321" y="0" width="73" height="15" fontName="Sarabun Thin" fontSize="10.0" hTextAlign="Center" vTextAlign="Bottom">
 			<text><![CDATA[พักเที่ยง]]></text>
 			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ad34b8be-d198-49b0-9481-8a347fdb330d"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
-		<element kind="staticText" uuid="6440a2e4-9b30-4b09-9c99-e8bb13f21601" x="347" y="0" width="34" height="15" fontName="Sarabun Thin" fontSize="10.0" hTextAlign="Center" vTextAlign="Bottom">
+		<element kind="staticText" uuid="6440a2e4-9b30-4b09-9c99-e8bb13f21601" x="394" y="0" width="34" height="15" fontName="Sarabun Thin" fontSize="10.0" hTextAlign="Center" vTextAlign="Bottom">
 			<text><![CDATA[ค่ำ/เช้า]]></text>
 			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fd69d04d-bc41-4fe0-b500-3d1f48079701"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -264,23 +281,27 @@ limit 200
 			<text><![CDATA[ชื่อ]]></text>
 			<box leftPadding="5"/>
 		</element>
-		<element kind="staticText" uuid="e46ffcc4-eb3c-417e-ad92-81895deef7f6" x="184" y="0" width="30" height="15" fontName="Sarabun Thin" fontSize="10.0" hTextAlign="Center" vTextAlign="Bottom">
+		<element kind="staticText" uuid="e46ffcc4-eb3c-417e-ad92-81895deef7f6" x="231" y="0" width="30" height="15" fontName="Sarabun Thin" fontSize="10.0" hTextAlign="Center" vTextAlign="Bottom">
 			<text><![CDATA[สถานะ]]></text>
+		</element>
+		<element kind="staticText" uuid="1a49528d-4f58-4dd1-8a01-5493c94555bc" x="120" y="0" width="56" height="15" fontName="Sarabun Thin" fontSize="10.0" hTextAlign="Left" vTextAlign="Bottom">
+			<text><![CDATA[นามสกุล]]></text>
+			<box leftPadding="5"/>
 		</element>
 		<property name="com.jaspersoft.studio.unit.height" value="px"/>
 	</columnHeader>
 	<detail>
-		<band height="16" splitType="Stretch">
+		<band height="17" splitType="Stretch">
 			<element kind="textField" uuid="325fdd72-6764-487b-aa29-58d2d4876fb4" x="20" y="0" width="44" height="16" fontName="Sarabun Thin" vTextAlign="Bottom">
 				<expression><![CDATA[$F{scanCode}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d51971cc-1324-4959-b432-9a6ff138b4a8"/>
 				<box leftPadding="5"/>
 			</element>
-			<element kind="textField" uuid="ffa67bf9-f357-4870-9819-f79e7e1e2869" x="214" y="0" width="60" height="16" fontName="Sarabun Thin" hTextAlign="Center" vTextAlign="Bottom">
+			<element kind="textField" uuid="ffa67bf9-f357-4870-9819-f79e7e1e2869" x="261" y="0" width="60" height="16" fontName="Sarabun Thin" hTextAlign="Center" vTextAlign="Bottom">
 				<expression><![CDATA[$F{morning}+ " - " +$F{evening}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d751f7cf-8a69-48fa-b4e2-72da6ea89acd"/>
 			</element>
-			<element kind="textField" uuid="a6d9d08e-296a-499e-8a16-32f9a6864bab" x="347" y="0" width="34" height="16" fontName="Sarabun Thin" fontSize="10.0" blankWhenNull="true" hTextAlign="Center" vTextAlign="Bottom">
+			<element kind="textField" uuid="a6d9d08e-296a-499e-8a16-32f9a6864bab" x="394" y="0" width="34" height="16" fontName="Sarabun Thin" fontSize="10.0" blankWhenNull="true" hTextAlign="Center" vTextAlign="Bottom">
 				<expression><![CDATA[$F{early} != null ? $F{early} :  
 ($F{night} == null ? "" : $F{night})
 ]]></expression>
@@ -313,7 +334,7 @@ $F{late_lunch_minutes}.intValue()
 				<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="8"/>
 			</element>
-			<element kind="textField" uuid="d2f40a9e-1626-40ab-b6a1-fcb1ab7e5455" x="274" y="0" width="73" height="16" fontName="Sarabun Thin" blankWhenNull="false" bold="false" hTextAlign="Center" vTextAlign="Bottom">
+			<element kind="textField" uuid="d2f40a9e-1626-40ab-b6a1-fcb1ab7e5455" x="321" y="0" width="73" height="16" fontName="Sarabun Thin" blankWhenNull="false" bold="false" hTextAlign="Center" vTextAlign="Bottom">
 				<expression><![CDATA[($F{lunch_out} == null ? "x" : $F{lunch_out}) + " - " + ($F{lunch_in} == null ? "x" : $F{lunch_in})
 ]]></expression>
 			</element>
@@ -328,7 +349,7 @@ $F{late_lunch_minutes}.intValue()
 				<expression><![CDATA[$V{groupcount}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d51971cc-1324-4959-b432-9a6ff138b4a8"/>
 			</element>
-			<element kind="textField" uuid="90a922e5-23ff-462b-88cc-e8c0cc4bab07" x="184" y="0" width="30" height="16" fontName="Sarabun Thin" blankWhenNull="true" hTextAlign="Center" vTextAlign="Bottom">
+			<element kind="textField" uuid="90a922e5-23ff-462b-88cc-e8c0cc4bab07" x="231" y="0" width="30" height="16" fontName="Sarabun Thin" blankWhenNull="true" hTextAlign="Center" vTextAlign="Bottom">
 				<expression><![CDATA["1".equals($F{status}) ? ""
 : "2".equals($F{status}) ? "/"
 : "3".equals($F{status}) ? "X"
@@ -337,6 +358,27 @@ $F{late_lunch_minutes}.intValue()
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a733f1dc-c061-4ffd-8481-12d493e35cd1"/>
 				<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="textField" uuid="dd9be19a-19bb-4b0b-95d8-423757e618fa" x="120" y="0" width="56" height="16" fontName="Sarabun Thin" blankWhenNull="true" vTextAlign="Bottom">
+				<expression><![CDATA[$F{scanName}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a733f1dc-c061-4ffd-8481-12d493e35cd1"/>
+				<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<box leftPadding="5"/>
+			</element>
+			<element kind="textField" uuid="491eb895-0874-4fa7-8500-f3a19a22620f" x="170" y="0" width="32" height="16" fontName="Sarabun Thin" pattern="#,###.###;(#,###.###-)" hTextAlign="Right" vTextAlign="Bottom">
+				<printWhenExpression><![CDATA[$F{ot_total_minutes}.intValue()>0]]></printWhenExpression>
+				<expression><![CDATA[$F{ecom}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ae5aca1c-b4a1-42e7-b0ac-1e89b194eb69"/>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="8"/>
+			</element>
+			<element kind="textField" uuid="3ad96d44-7cc6-4715-a081-e204b4756307" x="200" y="0" width="32" height="16" fontName="Sarabun Thin" pattern="#,###.###;(#,###.###-)" hTextAlign="Right" vTextAlign="Bottom">
+				<printWhenExpression><![CDATA[$F{ot_total_minutes}.intValue()>0]]></printWhenExpression>
+				<expression><![CDATA[$F{ccom}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ae5aca1c-b4a1-42e7-b0ac-1e89b194eb69"/>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="8"/>
 			</element>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</band>
