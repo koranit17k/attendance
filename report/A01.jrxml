@@ -11,7 +11,7 @@
 ]]></defaultValueExpression>
 	</parameter>
 	<query language="SQL"><![CDATA[SELECT v.*,
-    e.comCode as ecom,
+	e.comCode as ecom,
     c.comCode as ccom,
     e.name as employee_name,
     c.comName as company_name,

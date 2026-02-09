@@ -6,9 +6,11 @@ select a.status,
     c.comName as company_name,
     a.scanCode,
     a.dateAt,
-    a.day_case,
-    a.lunch_case,
-    a.night_case,
+    a.day_case,    a.lunch_case,
+
+
+
+   a.night_case,
     a.early,
     a.morning,
     a.lunch_out,

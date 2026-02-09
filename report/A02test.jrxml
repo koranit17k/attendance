@@ -1,19 +1,8 @@
 <!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
-<jasperReport name="สรุปประจำเดือน" language="java" columnCount="1" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="27e5c3a4-33da-4220-aa35-ee1ff2660017">
+<jasperReport name="A02test" language="java" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="489cab8f-4b60-4fa6-88a9-e8ca5f15513a">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="payroll"/>
-	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="646"/>
-	<property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="354"/>
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
-	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<style name="Crosstab 1_CH" mode="Opaque" backcolor="#F0F8FF">
+	<style name="Crosstab_CH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 			<topPen lineWidth="0.5" lineColor="#000000"/>
@@ -22,7 +11,7 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="Crosstab 1_CG" mode="Opaque" backcolor="#BFE1FF">
+	<style name="Crosstab_CG" mode="Opaque" backcolor="#BFE1FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 			<topPen lineWidth="0.5" lineColor="#000000"/>
@@ -31,7 +20,7 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="Crosstab 1_CT" mode="Opaque" backcolor="#005FB3">
+	<style name="Crosstab_CT" mode="Opaque" backcolor="#005FB3">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 			<topPen lineWidth="0.5" lineColor="#000000"/>
@@ -40,7 +29,7 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<style name="Crosstab 1_CD" mode="Opaque" backcolor="#FFFFFF">
+	<style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
 			<topPen lineWidth="0.5" lineColor="#000000"/>
@@ -49,28 +38,30 @@
 			<rightPen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<parameter name="pYear" class="java.lang.String">
-		<defaultValueExpression><![CDATA[2025]]></defaultValueExpression>
-	</parameter>
-	<parameter name="pMonth" class="java.lang.String">
-		<defaultValueExpression><![CDATA[11]]></defaultValueExpression>
-	</parameter>
-	<query language="SQL"><![CDATA[SELECT v.*,
-    e.comCode as ecom,
-    c.comCode as ccom,
-    e.name as employee_name,
-    c.comName as company_name,
-    s.name as scanName
-FROM vAttendanceMinutes v
-    left join scancode s on v.scanCode = s.scanCode
-    left join employee e on v.scanCode = e.scanCode
-    left  join company c on e.comCode = c.comCode
-Where STR_TO_DATE(v.dateAt, '%Y-%m-%d') BETWEEN
-      STR_TO_DATE(CONCAT($P!{pYear}, '-', LPAD($P!{pMonth},2,'0'), '-01'), '%Y-%m-%d')
-  AND LAST_DAY(
-      STR_TO_DATE(CONCAT($P!{pYear}, '-', LPAD($P!{pMonth},2,'0'), '-01'), '%Y-%m-%d')
-  )
-ORDER BY ecom, scancode]]></query>
+	<parameter name="pYear" class="java.lang.Integer"/>
+	<parameter name="pMonth" class="java.lang.Integer"/>
+	<query language="SQL"><![CDATA[SELECT
+  dd.dateAt as ddateAt,
+  v.*,
+  e.comCode AS ecom,
+  c.comCode AS ccom,
+  e.name AS employee_name,
+  c.comName AS company_name,
+  s.name AS scanName
+FROM dim_date dd
+LEFT JOIN vAttendanceMinutes v
+  ON STR_TO_DATE(v.dateAt, '%Y-%m-%d') = dd.dateAt
+LEFT JOIN scancode s ON v.scanCode = s.scanCode
+LEFT JOIN employee e ON v.scanCode = e.scanCode
+LEFT JOIN company c ON e.comCode = c.comCode
+WHERE YEAR(dd.dateAt) = $P{pYear}
+  AND MONTH(dd.dateAt) = $P{pMonth}
+]]></query>
+	<field name="ddateAt" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="dateAt"/>
+		<property name="com.jaspersoft.studio.field.label" value="ddateAt"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="dim_date"/>
+	</field>
 	<field name="status" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="status"/>
 		<property name="com.jaspersoft.studio.field.label" value="status"/>
@@ -79,12 +70,12 @@ ORDER BY ecom, scancode]]></query>
 	<field name="scanCode" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="scanCode"/>
 		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="timecard"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="v"/>
 	</field>
 	<field name="dateAt" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="dateAt"/>
 		<property name="com.jaspersoft.studio.field.label" value="dateAt"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="dim_date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="v"/>
 	</field>
 	<field name="day_case" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="day_case"/>
@@ -167,13 +158,11 @@ ORDER BY ecom, scancode]]></query>
 		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
 	</field>
 	<field name="employee_name" class="java.lang.String">
-		<description><![CDATA[ชื่อจริง]]></description>
 		<property name="com.jaspersoft.studio.field.name" value="name"/>
 		<property name="com.jaspersoft.studio.field.label" value="employee_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
 	</field>
 	<field name="company_name" class="java.lang.String">
-		<description><![CDATA[บริษัท ชื่อ]]></description>
 		<property name="com.jaspersoft.studio.field.name" value="comName"/>
 		<property name="com.jaspersoft.studio.field.label" value="company_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
@@ -183,87 +172,89 @@ ORDER BY ecom, scancode]]></query>
 		<property name="com.jaspersoft.studio.field.label" value="scanName"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="scancode"/>
 	</field>
-	<title height="57" splitType="Stretch">
-		<element kind="textField" uuid="77f91706-70bb-46b1-8780-b1005ee9bd10" x="290" y="0" width="178" height="34" fontName="Sarabun Thin" fontSize="12.0" hTextAlign="Center" vTextAlign="Middle">
-			<expression><![CDATA[$P{JASPER_REPORT}.getName()]]></expression>
-		</element>
-		<element kind="textField" uuid="9174d50f-387b-4cd6-b113-174c230d209a" x="620" y="10" width="100" height="30">
+	<background splitType="Stretch"/>
+	<title height="48" splitType="Stretch">
+		<element kind="textField" uuid="f47156bc-0f48-4741-81a4-55bdb4b18ebe" x="570" y="10" width="100" height="30">
 			<expression><![CDATA["ประจำเดือน " + $P{pMonth} + " / " + $P{pYear}
 ]]></expression>
 		</element>
-		<element kind="staticText" uuid="4ea45d9c-2f31-4032-ab43-856f8f0ddf8b" x="1" y="0" width="18" height="20" fontName="Sarabun Light" fontSize="7.0">
-			<text><![CDATA[A02]]></text>
-		</element>
-		<element kind="textField" uuid="c1fb61d6-3ccf-418a-adaf-6f7e5d455ee0" x="786" y="0" width="15" height="20" fontName="Sarabun Thin" fontSize="8.0" evaluationTime="Report" hTextAlign="Left">
+		<element kind="textField" uuid="3e025ca8-35f0-4a27-a929-c7744efff994" x="736" y="0" width="15" height="20" fontName="Sarabun Thin" fontSize="8.0" evaluationTime="Report" hTextAlign="Left">
 			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 		</element>
-		<element kind="textField" uuid="8f6f3eb8-4da9-4239-aee1-c1074b26b788" x="758" y="0" width="25" height="20" fontName="Sarabun Thin" fontSize="8.0" hTextAlign="Right">
+		<element kind="staticText" uuid="7a672303-f26b-43aa-a2b6-3ceca69ff56f" x="1" y="0" width="18" height="20" fontName="Sarabun Light" fontSize="7.0">
+			<text><![CDATA[A02]]></text>
+		</element>
+		<element kind="textField" uuid="0f0c4c0e-fa18-4070-af83-173c857db9c2" x="708" y="0" width="25" height="20" fontName="Sarabun Thin" fontSize="8.0" hTextAlign="Right">
 			<expression><![CDATA[$V{PAGE_NUMBER}+" /"]]></expression>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 		</element>
+		<element kind="textField" uuid="185636b0-587d-4627-933e-2dc239339b54" x="290" y="0" width="178" height="34" fontName="Sarabun Thin" fontSize="12.0" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[$P{JASPER_REPORT}.getName()]]></expression>
+		</element>
 	</title>
-	<pageHeader height="35" splitType="Stretch">
-		<element kind="textField" uuid="5e3c6189-eb59-4d1a-9d7b-f41e70b82788" x="787" y="0" width="15" height="15" fontName="Sarabun Thin" fontSize="8.0" evaluationTime="Report" hTextAlign="Left">
+	<columnHeader height="26" splitType="Stretch">
+		<element kind="textField" uuid="f605c872-95fc-4c3e-8ac0-246e316af686" x="736" y="0" width="15" height="15" fontName="Sarabun Thin" fontSize="8.0" evaluationTime="Report" hTextAlign="Left">
 			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1
 ]]></printWhenExpression>
 			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
-		<element kind="textField" uuid="b045afbf-4b73-4d23-a137-380efa9b21f2" x="760" y="0" width="25" height="15" fontName="Sarabun Thin" fontSize="8.0" hTextAlign="Right">
+		<element kind="textField" uuid="ecb9f0f0-c2e2-49ff-aa24-65eb46c5aeba" x="711" y="0" width="25" height="15" fontName="Sarabun Thin" fontSize="8.0" hTextAlign="Right">
 			<expression><![CDATA[$V{PAGE_NUMBER} > 1 ? $V{PAGE_NUMBER} + " /" : ""
 ]]></expression>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
-	</pageHeader>
-	<summary height="109" splitType="Stretch">
-		<element kind="crosstab" uuid="518b5fa7-9ef2-43c9-aeb4-45b20cc1b216" x="0" y="0" width="802" height="100">
+	</columnHeader>
+	<summary height="81" splitType="Stretch">
+		<element kind="crosstab" uuid="83dce788-5d07-4d09-8a49-06227bc033c4" x="0" y="0" width="750" height="70">
 			<dataset/>
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
-			<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab 1_CH"/>
-			<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab 1_CG"/>
-			<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab 1_CT"/>
-			<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab 1_CD"/>
-			<property name="com.jaspersoft.studio.unit.x" value="px"/>
-			<rowGroup name="company_name" totalPosition="End" width="30">
+			<property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
+			<property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
+			<property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
+			<property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
+			<rowGroup name="company_name" totalPosition="End" width="20">
 				<bucket class="java.lang.String">
 					<expression><![CDATA[$F{company_name}]]></expression>
 				</bucket>
-				<header mode="Opaque" style="Crosstab 1_CH">
-					<element kind="textField" uuid="ea6ca828-6b33-4dc3-a4c9-3a743448e687" x="0" y="0" width="30" height="15" fontName="Sarabun Thin" fontSize="8.0" textAdjust="StretchHeight" hTextAlign="Justified">
+				<header mode="Opaque" style="Crosstab_CH">
+					<element kind="textField" uuid="b24b07c9-1954-4f3a-ac10-dfc7654f45a1" x="0" y="0" width="20" height="13" fontName="Sarabun Thin" fontSize="6.0" textAdjust="StretchHeight" blankWhenNull="true">
 						<expression><![CDATA[$V{company_name}]]></expression>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					</element>
 				</header>
-				<totalHeader mode="Opaque" style="Crosstab 1_CG"/>
+				<totalHeader mode="Opaque" style="Crosstab_CG">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</totalHeader>
 			</rowGroup>
 			<rowGroup name="scanName" totalPosition="End" width="30">
 				<bucket class="java.lang.String">
 					<expression><![CDATA[$F{scanName}]]></expression>
 				</bucket>
-				<header mode="Opaque" style="Crosstab 1_CH">
-					<element kind="textField" uuid="7229fe09-6fc2-46b9-8e64-990b2648734e" x="0" y="0" width="30" height="10" fontName="Sarabun Thin" fontSize="6.0">
+				<header mode="Opaque" style="Crosstab_CH">
+					<element kind="textField" uuid="755a7f13-1c7f-4bad-875f-06a1737b0ac0" x="0" y="0" width="30" height="8" fontName="Sarabun Thin" fontSize="6.0">
 						<expression><![CDATA[$V{scanName}]]></expression>
+						<box leftPadding="2"/>
 					</element>
 				</header>
-				<totalHeader mode="Opaque" style="Crosstab 1_CT"/>
+				<totalHeader mode="Opaque" style="Crosstab_CT"/>
 			</rowGroup>
-			<columnGroup name="dateAt" totalPosition="End" height="10">
-				<bucket class="java.lang.String">
-					<expression><![CDATA[$F{dateAt}]]></expression>
+			<columnGroup name="ddateAt" totalPosition="End" height="10">
+				<bucket class="java.sql.Date">
+					<expression><![CDATA[$F{ddateAt}]]></expression>
 				</bucket>
-				<header mode="Opaque" style="Crosstab 1_CH">
-					<element kind="textField" uuid="08613d8f-ee0c-4afe-9a25-130380c7c087" x="0" y="0" width="24" height="10" fontName="Sarabun Thin" fontSize="6.0">
-						<expression><![CDATA[$V{dateAt} != null
-? $V{dateAt}.split("-")[$V{dateAt}.split("-").length - 1]
+				<header mode="Opaque" style="Crosstab_CH">
+					<element kind="textField" uuid="d428c665-8a95-4744-a29e-a7fe24adae94" x="0" y="0" width="22" height="10" fontName="Sarabun Thin" fontSize="6.0" hTextAlign="Right">
+						<expression><![CDATA[$V{ddateAt} != null
+? new java.text.SimpleDateFormat("dd").format($V{ddateAt})
 : ""
 ]]></expression>
 					</element>
 				</header>
-				<totalHeader mode="Opaque" style="Crosstab 1_CT">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</totalHeader>
+				<totalHeader mode="Opaque" style="Crosstab_CT"/>
 			</columnGroup>
 			<measure name="late_morning_MEAS" calculation="Sum" class="java.lang.Integer">
 				<expression><![CDATA[$F{late_morning_minutes}]]></expression>
@@ -271,12 +262,12 @@ ORDER BY ecom, scancode]]></query>
 			<measure name="late_lunch_MEAS" calculation="Sum" class="java.lang.Integer">
 				<expression><![CDATA[$F{late_lunch_minutes}]]></expression>
 			</measure>
-			<measure name="work_minutes_MEAS" calculation="Sum" class="java.math.BigDecimal">
+			<measure name="work_minutes_MEAS" calculation="Sum" class="java.lang.Integer">
 				<expression><![CDATA[$F{work_minutes}]]></expression>
 			</measure>
-			<cell width="24" height="10">
-				<contents mode="Opaque" style="Crosstab 1_CD">
-					<element kind="textField" uuid="5bff2a2c-5085-482d-bc18-a42a6c303593" x="0" y="0" width="24" height="10" fontName="Sarabun Thin" fontSize="6.0" pattern="#,##0.###;(#,##0.###-)" blankWhenNull="false">
+			<cell width="22" height="8">
+				<contents mode="Opaque" style="Crosstab_CD">
+					<element kind="textField" uuid="d7a12ec5-326c-499a-9db7-97aa14fb701d" x="0" y="0" width="22" height="8" fontName="Sarabun Thin" fontSize="6.0" hTextAlign="Right">
 						<expression><![CDATA[(
   ($V{late_morning_MEAS} == null || $V{late_morning_MEAS} == 0)
   && ($V{late_lunch_MEAS} == null || $V{late_lunch_MEAS} == 0)
@@ -289,25 +280,28 @@ ORDER BY ecom, scancode]]></query>
   ($V{late_lunch_MEAS} == null || $V{late_lunch_MEAS} == 0 ? "" : $V{late_lunch_MEAS})
 )
 ]]></expression>
+						<box rightPadding="0"/>
 					</element>
 				</contents>
 			</cell>
-			<cell width="5" height="10" columnTotalGroup="dateAt">
-				<contents mode="Opaque" style="Crosstab 1_CT"/>
+			<cell width="5" height="8" columnTotalGroup="ddateAt">
+				<contents mode="Opaque" style="Crosstab_CT">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</contents>
 			</cell>
-			<cell width="24" height="15" rowTotalGroup="company_name">
-				<contents mode="Opaque" style="Crosstab 1_CG"/>
+			<cell width="22" height="15" rowTotalGroup="company_name">
+				<contents mode="Opaque" style="Crosstab_CG"/>
 			</cell>
-			<cell width="5" height="15" rowTotalGroup="company_name" columnTotalGroup="dateAt">
-				<contents mode="Opaque" style="Crosstab 1_CT"/>
+			<cell width="5" height="15" rowTotalGroup="company_name" columnTotalGroup="ddateAt">
+				<contents mode="Opaque" style="Crosstab_CT"/>
 			</cell>
-			<cell width="24" height="5" rowTotalGroup="scanName">
-				<contents mode="Opaque" style="Crosstab 1_CT">
+			<cell width="22" height="5" rowTotalGroup="scanName">
+				<contents mode="Opaque" style="Crosstab_CT">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</contents>
 			</cell>
-			<cell width="5" height="5" rowTotalGroup="scanName" columnTotalGroup="dateAt">
-				<contents mode="Opaque" style="Crosstab 1_CT"/>
+			<cell width="5" height="5" rowTotalGroup="scanName" columnTotalGroup="ddateAt">
+				<contents mode="Opaque" style="Crosstab_CT"/>
 			</cell>
 		</element>
 	</summary>
