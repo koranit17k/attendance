@@ -291,7 +291,7 @@ limit 200
 		<property name="com.jaspersoft.studio.unit.height" value="px"/>
 	</columnHeader>
 	<detail>
-		<band height="17" splitType="Stretch">
+		<band height="16" splitType="Stretch">
 			<element kind="textField" uuid="325fdd72-6764-487b-aa29-58d2d4876fb4" x="20" y="0" width="44" height="16" fontName="Sarabun Thin" vTextAlign="Bottom">
 				<expression><![CDATA[$F{scanCode}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d51971cc-1324-4959-b432-9a6ff138b4a8"/>
@@ -338,13 +338,6 @@ $F{late_lunch_minutes}.intValue()
 				<expression><![CDATA[($F{lunch_out} == null ? "x" : $F{lunch_out}) + " - " + ($F{lunch_in} == null ? "x" : $F{lunch_in})
 ]]></expression>
 			</element>
-			<element kind="textField" uuid="29003703-2141-4ed1-ae36-ab61b420a441" x="64" y="0" width="56" height="16" fontName="Sarabun Thin" blankWhenNull="true" vTextAlign="Bottom">
-				<expression><![CDATA[$F{employee_name}]]></expression>
-				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a733f1dc-c061-4ffd-8481-12d493e35cd1"/>
-				<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				<box leftPadding="5"/>
-			</element>
 			<element kind="textField" uuid="cf6ae7f6-d2ac-493a-b9e8-3f0569fccd85" x="0" y="0" width="20" height="16" fontName="Sarabun Thin" hTextAlign="Center" vTextAlign="Bottom">
 				<expression><![CDATA[$V{groupcount}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d51971cc-1324-4959-b432-9a6ff138b4a8"/>
@@ -359,23 +352,15 @@ $F{late_lunch_minutes}.intValue()
 				<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			</element>
-			<element kind="textField" uuid="dd9be19a-19bb-4b0b-95d8-423757e618fa" x="120" y="0" width="56" height="16" fontName="Sarabun Thin" blankWhenNull="true" vTextAlign="Bottom">
+			<element kind="textField" uuid="dd9be19a-19bb-4b0b-95d8-423757e618fa" x="64" y="0" width="56" height="16" fontName="Sarabun Thin" blankWhenNull="true" vTextAlign="Bottom">
 				<expression><![CDATA[$F{scanName}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a733f1dc-c061-4ffd-8481-12d493e35cd1"/>
 				<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<box leftPadding="5"/>
 			</element>
-			<element kind="textField" uuid="491eb895-0874-4fa7-8500-f3a19a22620f" x="170" y="0" width="32" height="16" fontName="Sarabun Thin" pattern="#,###.###;(#,###.###-)" hTextAlign="Right" vTextAlign="Bottom">
-				<printWhenExpression><![CDATA[$F{ot_total_minutes}.intValue()>0]]></printWhenExpression>
+			<element kind="textField" uuid="3ad96d44-7cc6-4715-a081-e204b4756307" x="190" y="0" width="21" height="16" fontName="Sarabun Thin" pattern="#,###.###;(#,###.###-)" blankWhenNull="true" hTextAlign="Right" vTextAlign="Bottom">
 				<expression><![CDATA[$F{ecom}]]></expression>
-				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ae5aca1c-b4a1-42e7-b0ac-1e89b194eb69"/>
-				<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="8"/>
-			</element>
-			<element kind="textField" uuid="3ad96d44-7cc6-4715-a081-e204b4756307" x="200" y="0" width="32" height="16" fontName="Sarabun Thin" pattern="#,###.###;(#,###.###-)" hTextAlign="Right" vTextAlign="Bottom">
-				<printWhenExpression><![CDATA[$F{ot_total_minutes}.intValue()>0]]></printWhenExpression>
-				<expression><![CDATA[$F{ccom}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ae5aca1c-b4a1-42e7-b0ac-1e89b194eb69"/>
 				<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="8"/>
