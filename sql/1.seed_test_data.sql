@@ -152,5 +152,5 @@ VALUES (@emp_code, '2000-01-27 12:00:00'),
 INSERT INTO timecard (scanCode, scanAt)
 VALUES (@emp_code, '2000-01-28 11:15:00');
 -- 29. Absent 7: 11:15
-INSERT INTO timecard (scanCode, scanAt) VALUES
-(@emp_code, '2000-01-29 11:15:00');
+INSERT INTO timecard (scanCode, scanAt)
+VALUES (@emp_code, '2000-01-29 11:15:00');
