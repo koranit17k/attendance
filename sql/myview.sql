@@ -6,11 +6,9 @@ select a.status,
     c.comName as company_name,
     a.scanCode,
     a.dateAt,
-    a.day_case,    a.lunch_case,
-
-
-
-   a.night_case,
+    a.day_case,
+    a.lunch_case,
+    a.night_case,
     a.early,
     a.morning,
     a.lunch_out,
@@ -19,9 +17,9 @@ select a.status,
     a.night,
     -- Lunch Minutes (Deduction)
     CASE
-        -- 1. No Lunch Scan: Deduct 240 mins (4 hours)
-        WHEN a.lunch_case = '1.ไม่พักเที่ยง' THEN 240 -- 3. Single Lunch Scan: Deduct 120 mins (2 hours)
-        WHEN a.lunch_case = '3.สแกนครั้งเดียว' THEN 120 -- Normal Case: Deduct actual duration (min 60 mins)
+        -- 1. No Lunch Scan: Deduct 300 mins (1h break + 4h penalty)
+        WHEN a.lunch_case = '1.ไม่พักเที่ยง' THEN 300 -- 3. Single Lunch Scan: Deduct 180 mins (1h break + 2h penalty)
+        WHEN a.lunch_case = '3.สแกนครั้งเดียว' THEN 180 -- Normal Case: Deduct actual duration (min 60 mins)
         WHEN a.lunch_out IS NOT NULL
         AND a.lunch_in IS NOT NULL THEN GREATEST(
             60,
@@ -56,7 +54,7 @@ select a.status,
                     TIMEDIFF(
                         -- End Time (Capped at 17:00)
                         LEAST(
-                            COALESCE(a.evening, a.night, a.early, '17:00:00'),
+                            COALESCE(a.evening, a.night, '17:00:00'),
                             '17:00:00'
                         ),
                         -- Start Time (Capped at 08:00)
@@ -66,8 +64,8 @@ select a.status,
             ) - -- Subtract Lunch Deduction
             (
                 CASE
-                    WHEN a.lunch_case = '1.ไม่พักเที่ยง' THEN 240
-                    WHEN a.lunch_case = '3.สแกนครั้งเดียว' THEN 120
+                    WHEN a.lunch_case = '1.ไม่พักเที่ยง' THEN 300
+                    WHEN a.lunch_case = '3.สแกนครั้งเดียว' THEN 180
                     WHEN a.lunch_out IS NOT NULL
                     AND a.lunch_in IS NOT NULL THEN GREATEST(
                         60,
@@ -126,8 +124,7 @@ select a.status,
         END
         ELSE 0
     END AS ot_total_minutes
-from vAttendance a
---     left join employee e on a.scanCode = e.scanCode
---     left join company c on e.comCode = c.comCode;
-    left join scancode e on a.scanCode = e.scanCode
+from vAttendance a --     left join employee e on a.scanCode = e.scanCode
+    --     left join company c on e.comCode = c.comCode;
+    left join employee e on a.scanCode = e.scanCode
     left join company c on e.comCode = c.comCode;

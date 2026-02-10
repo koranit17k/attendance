@@ -17,17 +17,33 @@
     c.comName as company_name,
     s.name as scanName
 FROM vAttendanceMinutes v
-    left join scancode s on v.scanCode = s.scanCode
+    join scancode s on v.scanCode = s.scanCode
     left join employee e on v.scanCode = e.scanCode
     left  join company c on e.comCode = c.comCode
 WHERE  dateAt = $P{startDate}
 ORDER BY ecom, scancode
-limit 200
+limit 500
 ]]></query>
 	<field name="status" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="status"/>
 		<property name="com.jaspersoft.studio.field.label" value="status"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vAttendanceMinutes"/>
+	</field>
+	<field name="comcode" class="java.lang.String">
+		<description><![CDATA[รหัสบริษัท]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="comcode"/>
+		<property name="com.jaspersoft.studio.field.label" value="comcode"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+	</field>
+	<field name="employee_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="employee_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="employee_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+	</field>
+	<field name="company_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="company_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="company_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
 	</field>
 	<field name="scanCode" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="scanCode"/>
@@ -119,12 +135,12 @@ limit 200
 		<property name="com.jaspersoft.studio.field.label" value="ccom"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
 	</field>
-	<field name="employee_name" class="java.lang.String">
+	<field name="COLUMN_23" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="name"/>
 		<property name="com.jaspersoft.studio.field.label" value="employee_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
 	</field>
-	<field name="company_name" class="java.lang.String">
+	<field name="COLUMN_24" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="comName"/>
 		<property name="com.jaspersoft.studio.field.label" value="company_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>

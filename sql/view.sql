@@ -41,7 +41,7 @@ select `vTimeCard`.`dateAt` AS `dateAt`,
     max(
         if(
             `vTimeCard`.`timeAt` >= '12:00'
-            and `vTimeCard`.`timeAt` < '15:00',
+            and `vTimeCard`.`timeAt` <= '15:00',
             `vTimeCard`.`timeAt`,
             NULL
         )
@@ -72,13 +72,21 @@ group by `vTimeCard`.`dateAt`,
 CREATE OR REPLACE ALGORITHM = UNDEFINED VIEW `vAttendance` AS
 select if(
         `v`.`morning` is not null
-        and `v`.`evening` is not null,
+        and (
+            `v`.`evening` is not null
+            or `v`.`night` is not null
+            or `v`.`early` is not null
+        ),
         '1.เช้า-เย็น',
         if(
             `v`.`morning` is not null,
             '2.เช้าขาเดียว',
             if(
-                `v`.`evening` is not null,
+                (
+                    `v`.`evening` is not null
+                    or `v`.`night` is not null
+                    or `v`.`early` is not null
+                ),
                 '3.เย็นขาเดียว',
                 '4.ไม่มี'
             )
