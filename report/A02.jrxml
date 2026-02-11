@@ -138,7 +138,7 @@ limit 500
 		<property name="com.jaspersoft.studio.field.tree.path" value="scancode"/>
 	</field>
 	<background splitType="Stretch"/>
-	<title height="57" splitType="Stretch">
+	<title height="55" splitType="Stretch">
 		<element kind="textField" uuid="b59aa086-6ff1-4aae-ae55-f8bc5db25ba8" x="191" y="0" width="178" height="34" fontName="Sarabun Thin" fontSize="12.0" hTextAlign="Center" vTextAlign="Middle">
 			<expression><![CDATA[$P{JASPER_REPORT}.getName()]]></expression>
 		</element>
@@ -222,7 +222,7 @@ new java.text.SimpleDateFormat("dd/MM/yyyy").format(
 			<text><![CDATA[dateAt]]></text>
 			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 		</element>
-		<element kind="staticText" uuid="63fac2e0-0276-42aa-bef8-2decc319654f" x="60" y="0" width="40" height="24" fontName="Sarabun Thin">
+		<element kind="staticText" uuid="63fac2e0-0276-42aa-bef8-2decc319654f" x="60" y="0" width="30" height="24" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[status]]></text>
 			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e8faded7-3feb-49c2-97f5-675beba13dd1"/>
 		</element>
@@ -269,7 +269,7 @@ new java.text.SimpleDateFormat("dd/MM/yyyy").format(
 				<expression><![CDATA[$F{dateAt}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
-			<element kind="textField" uuid="adbcbe68-225c-4e05-82cc-dbd61b5a9369" x="60" y="0" width="40" height="16" fontName="Sarabun Thin">
+			<element kind="textField" uuid="adbcbe68-225c-4e05-82cc-dbd61b5a9369" x="60" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
 				<expression><![CDATA["1".equals($F{status}) ? ""
 : "2".equals($F{status}) ? "/"
 : "3".equals($F{status}) ? "X"

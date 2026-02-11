@@ -269,21 +269,21 @@ limit 500
 			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fd69d04d-bc41-4fe0-b500-3d1f48079701"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
-		<element kind="staticText" uuid="e77b1575-b3ec-48a3-be14-63070bdc6c62" x="428" y="0" width="32" height="15" fontName="Sarabun Thin" fontSize="10.0" hTextAlign="Right" vTextAlign="Bottom">
-			<text><![CDATA[เที่ยง]]></text>
+		<element kind="staticText" uuid="e77b1575-b3ec-48a3-be14-63070bdc6c62" x="428" y="0" width="52" height="15" fontName="Sarabun Thin" fontSize="10.0" hTextAlign="Right" vTextAlign="Bottom">
+			<text><![CDATA[เช้า/เที่ยง]]></text>
 			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="20dc3754-55e4-415b-90d0-7bb5d64091a1"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 			<box rightPadding="8"/>
 		</element>
-		<element kind="staticText" uuid="d494986b-0be7-46fc-beeb-710e7d4d17d0" x="460" y="0" width="32" height="15" fontName="Sarabun Thin" fontSize="10.0" hTextAlign="Right" vTextAlign="Bottom">
+		<element kind="staticText" uuid="d494986b-0be7-46fc-beeb-710e7d4d17d0" x="490" y="0" width="32" height="15" fontName="Sarabun Thin" fontSize="10.0" hTextAlign="Right" vTextAlign="Bottom">
 			<text><![CDATA[สาย(นาที)]]></text>
 			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="cf26e514-54eb-4969-b784-2bb50b3ab014"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 			<box rightPadding="8"/>
 		</element>
-		<element kind="staticText" uuid="0778d01d-4442-48dd-b3b9-1225c2da4227" x="492" y="0" width="32" height="15" fontName="Sarabun Thin" fontSize="10.0" hTextAlign="Right" vTextAlign="Bottom">
+		<element kind="staticText" uuid="0778d01d-4442-48dd-b3b9-1225c2da4227" x="522" y="0" width="32" height="15" fontName="Sarabun Thin" fontSize="10.0" hTextAlign="Right" vTextAlign="Bottom">
 			<text><![CDATA[OT]]></text>
 			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ae5aca1c-b4a1-42e7-b0ac-1e89b194eb69"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -324,14 +324,15 @@ limit 500
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fd69d04d-bc41-4fe0-b500-3d1f48079701"/>
 				<property name="com.jaspersoft.studio.unit.width" value="px"/>
 			</element>
-			<element kind="textField" uuid="acbcc7ff-9a2e-4244-af18-9355184c0935" x="428" y="0" width="32" height="16" fontName="Sarabun Thin" pattern="#,###.###;(#,###.###-)" hTextAlign="Right" vTextAlign="Bottom">
-				<printWhenExpression><![CDATA[$F{late_lunch_minutes}.intValue()>0]]></printWhenExpression>
-				<expression><![CDATA[$F{late_lunch_minutes}.intValue()]]></expression>
+			<element kind="textField" uuid="acbcc7ff-9a2e-4244-af18-9355184c0935" x="428" y="0" width="52" height="16" fontName="Sarabun Thin" hTextAlign="Right" vTextAlign="Bottom">
+				<printWhenExpression><![CDATA[$F{late_morning_minutes}.intValue()>0 || $F{late_lunch_minutes}.intValue()>0]]></printWhenExpression>
+				<expression><![CDATA[($F{late_morning_minutes}.intValue()>0 ?$F{late_morning_minutes}.intValue() :"") +"/"+
+($F{late_lunch_minutes}.intValue()>0 ?$F{late_lunch_minutes}.intValue():"")]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="20dc3754-55e4-415b-90d0-7bb5d64091a1"/>
 				<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="8"/>
 			</element>
-			<element kind="textField" uuid="9fb1f3f6-4101-4791-86ff-13ab52eec5de" x="460" y="0" width="32" height="16" fontName="Sarabun Thin" pattern="#,###.###;(#,###.###-)" hTextAlign="Right" vTextAlign="Bottom">
+			<element kind="textField" uuid="9fb1f3f6-4101-4791-86ff-13ab52eec5de" x="490" y="0" width="32" height="16" fontName="Sarabun Thin" pattern="#,###.###;(#,###.###-)" hTextAlign="Right" vTextAlign="Bottom">
 				<printWhenExpression><![CDATA[($F{late_morning_minutes}.intValue()+
 $F{late_lunch_minutes}.intValue())>0
 ]]></printWhenExpression>
@@ -343,7 +344,7 @@ $F{late_lunch_minutes}.intValue()
 				<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="8"/>
 			</element>
-			<element kind="textField" uuid="17c76019-5b38-406e-9e9e-9035e44abd9e" x="492" y="0" width="32" height="16" fontName="Sarabun Thin" pattern="#,###.###;(#,###.###-)" hTextAlign="Right" vTextAlign="Bottom">
+			<element kind="textField" uuid="17c76019-5b38-406e-9e9e-9035e44abd9e" x="522" y="0" width="32" height="16" fontName="Sarabun Thin" pattern="#,###.###;(#,###.###-)" hTextAlign="Right" vTextAlign="Bottom">
 				<printWhenExpression><![CDATA[$F{ot_total_minutes}.intValue()>0]]></printWhenExpression>
 				<expression><![CDATA[$F{ot_total_minutes}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ae5aca1c-b4a1-42e7-b0ac-1e89b194eb69"/>
