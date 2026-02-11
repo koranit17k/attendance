@@ -2,155 +2,118 @@
 -- Maps README scenarios to dates in 2000 (Case 1 -> Jan 1, Case 2 -> Jan 2, etc.)
 SET @test_year = '2000';
 SET @emp_code = '99999';
--- Use a test scan code
 -- Clear existing data for test range
 DELETE FROM timecard
 WHERE scanCode = @emp_code
     AND YEAR(scanAt) = @test_year
     AND MONTH(scanAt) = 1;
--- 1. Normal 1: 08:00, 12:00, 13:00, 17:00
 INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-01 08:00:00'),
-    (@emp_code, '2000-01-01 12:00:00'),
-    (@emp_code, '2000-01-01 13:00:00'),
-    (@emp_code, '2000-01-01 17:00:00');
--- 2. Normal 2: 07:50, 12:04, 12:45, 17:30
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-02 07:50:00'),
-    (@emp_code, '2000-01-02 12:04:00'),
-    (@emp_code, '2000-01-02 12:45:00'),
-    (@emp_code, '2000-01-02 17:30:00');
--- 3. OT Night 1: 08:00, 12:30, 12:50, 17:30, 21:00
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-03 08:00:00'),
-    (@emp_code, '2000-01-03 12:30:00'),
-    (@emp_code, '2000-01-03 12:50:00'),
-    (@emp_code, '2000-01-03 17:30:00'),
-    (@emp_code, '2000-01-03 21:00:00');
--- 4. OT Night 2: 08:00, 12:00, 12:55, 21:00
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-04 08:00:00'),
-    (@emp_code, '2000-01-04 12:00:00'),
-    (@emp_code, '2000-01-04 12:55:00'),
-    (@emp_code, '2000-01-04 21:00:00');
--- 5. OT Night 3: 12:00, 12:55, 21:00
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-05 12:00:00'),
-    (@emp_code, '2000-01-05 12:55:00'),
-    (@emp_code, '2000-01-05 21:00:00');
--- 6. OT Early: 08:00, 12:05, 12:57, 02:00 (Next Day)
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-06 08:00:00'),
-    (@emp_code, '2000-01-06 12:05:00'),
-    (@emp_code, '2000-01-06 12:57:00'),
-    (@emp_code, '2000-01-07 02:00:00');
--- Scan at 02:00 is Early for prev day
--- 7. Missing Lunch 1: 08:00, 17:00
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-07 08:00:00'),
-    (@emp_code, '2000-01-07 17:00:00');
--- 8. Missing Lunch 2: 08:00, 12:00, 17:00
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-08 08:00:00'),
-    (@emp_code, '2000-01-08 12:00:00'),
-    (@emp_code, '2000-01-08 17:00:00');
--- 9. Missing Lunch 3: 08:00, 15:00, 17:00 (15:00 is not lunch_out/in range typically?)
--- lunch_out: 11:00-13:30 (first/min), lunch_in 11:30-14:00, lunch_in view uses 12:00-15:00 range max?
--- View definition: lunch_in max(timeAt >= '12:00' and timeAt < '15:00')
--- 15:00 is exactly on boundary? Let's check view.sql: `timeAt < '15:00'` so 15:00 is excluded from lunch_in.
--- Wait, README says "15:00". If view says < 15:00, then 15:00 is NOT lunch_in.
--- Let's put 15:00:00.
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-09 08:00:00'),
-    (@emp_code, '2000-01-09 15:00:00'),
-    (@emp_code, '2000-01-09 17:00:00');
--- 10. morning+OT: 08:00, 12:01, 12:50, 20:31
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-10 08:00:00'),
-    (@emp_code, '2000-01-10 12:01:00'),
-    (@emp_code, '2000-01-10 12:50:00'),
-    (@emp_code, '2000-01-10 20:31:00');
--- 11. morning+MLunch+OT 1: 08:00, 20:01
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-11 08:00:00'),
-    (@emp_code, '2000-01-11 20:01:00');
--- 12. morning+MLunch+OT 2: 08:00, 12:00, 20:00
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-12 08:00:00'),
-    (@emp_code, '2000-01-12 12:00:00'),
-    (@emp_code, '2000-01-12 20:00:00');
--- 13. morning+MLunch+OT 3: 08:00, 14:00, 20:00
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-13 08:00:00'),
-    (@emp_code, '2000-01-13 14:00:00'),
-    (@emp_code, '2000-01-13 20:00:00');
--- 14. morning+MLunch+early: 08:00, 02:00 (Next Day)
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-14 08:00:00'),
-    (@emp_code, '2000-01-15 02:00:00');
--- 15. Half Day Morning 1: 08:00, 12:05
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-15 08:00:00'),
-    (@emp_code, '2000-01-15 12:05:00');
--- 16. Half Day Morning 2: 08:00, 12:00, 12:30
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-16 08:00:00'),
-    (@emp_code, '2000-01-16 12:00:00'),
-    (@emp_code, '2000-01-16 12:30:00');
--- 17. Half Day Afternoon 1: 13:00, 17:00
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-17 13:00:00'),
-    (@emp_code, '2000-01-17 17:00:00');
--- 18. Half Day Afternoon 2: 12:00, 13:00, 17:00
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-18 12:00:00'),
-    (@emp_code, '2000-01-18 13:00:00'),
-    (@emp_code, '2000-01-18 17:00:00');
--- 19. Late Morning: 08:20, 12:00, 13:00, 17:00
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-19 08:20:00'),
-    (@emp_code, '2000-01-19 12:00:00'),
-    (@emp_code, '2000-01-19 13:00:00'),
-    (@emp_code, '2000-01-19 17:00:00');
--- 20. Late Lunch: 08:00, 12:00, 13:15, 17:00
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-20 08:00:00'),
-    (@emp_code, '2000-01-20 12:00:00'),
-    (@emp_code, '2000-01-20 13:15:00'),
-    (@emp_code, '2000-01-20 17:00:00');
--- 21. Spam Morning: 07:50, 08:00, 08:05, 17:05
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-21 07:50:00'),
-    (@emp_code, '2000-01-21 08:00:00'),
-    (@emp_code, '2000-01-21 08:05:00'),
-    (@emp_code, '2000-01-21 17:05:00');
--- 22. Spam Lunch Out: 07:00, 11:55, 12:05, 12:10, 17:09
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-22 07:00:00'),
-    (@emp_code, '2000-01-22 11:55:00'),
-    (@emp_code, '2000-01-22 12:05:00'),
-    (@emp_code, '2000-01-22 12:10:00'),
-    (@emp_code, '2000-01-22 17:09:00');
--- 23. Absent 1: 08:00
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-23 08:00:00');
--- 24. Absent 2: 17:30
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-24 17:30:00');
--- 25. Absent 3: 17:30, 20:00
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-25 17:30:00'),
-    (@emp_code, '2000-01-25 20:00:00');
--- 26. Absent 4: 20:00
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-26 20:00:00');
--- 27. Absent 5: 12:00, 13:00 (Lunch Only)
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-27 12:00:00'),
-    (@emp_code, '2000-01-27 13:00:00');
--- 28. Absent 6: 11:15
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-28 11:15:00');
--- 29. Absent 7: 11:15
-INSERT INTO timecard (scanCode, scanAt)
-VALUES (@emp_code, '2000-01-29 11:15:00');
+VALUES -- 1. Normal 1: 07:52, 12:12, 13:12, 17:05
+    (@emp_code, '2000-01-01 07:52'),
+    (@emp_code, '2000-01-01 12:12'),
+    (@emp_code, '2000-01-01 13:12'),
+    (@emp_code, '2000-01-01 17:05'),
+    -- 2. Normal 2: 07:50, 12:14, 12:45, 17:30
+    (@emp_code, '2000-01-02 07:50'),
+    (@emp_code, '2000-01-02 12:14'),
+    (@emp_code, '2000-01-02 12:45'),
+    (@emp_code, '2000-01-02 17:30'),
+    -- 3. OT Night 1: 06:54, 12:32, 12:54, 17:31, 21:12
+    (@emp_code, '2000-01-03 06:54'),
+    (@emp_code, '2000-01-03 12:32'),
+    (@emp_code, '2000-01-03 12:54'),
+    (@emp_code, '2000-01-03 17:31'),
+    (@emp_code, '2000-01-03 21:12'),
+    -- 4. OT Night 2: 07:32, 12:10, 12:55, 21:10
+    (@emp_code, '2000-01-04 07:32'),
+    (@emp_code, '2000-01-04 12:10'),
+    (@emp_code, '2000-01-04 12:55'),
+    (@emp_code, '2000-01-04 21:10'),
+    -- 5. OT Night 3: 12:12, 12:55, 21:30
+    (@emp_code, '2000-01-05 12:12'),
+    (@emp_code, '2000-01-05 12:55'),
+    (@emp_code, '2000-01-05 21:30'),
+    -- 6. OT Early: 07:35, 12:05, 12:57, 02:02 (Next Day)
+    (@emp_code, '2000-01-06 07:35'),
+    (@emp_code, '2000-01-06 12:05'),
+    (@emp_code, '2000-01-06 12:57'),
+    (@emp_code, '2000-01-07 02:02'),
+    -- 7. Missing Lunch 1: 07:38, 17:03
+    (@emp_code, '2000-01-07 07:38'),
+    (@emp_code, '2000-01-07 17:03'),
+    -- 8. Missing Lunch 2: 07:50, 12:34, 17:05
+    (@emp_code, '2000-01-08 07:50'),
+    (@emp_code, '2000-01-08 12:34'),
+    (@emp_code, '2000-01-08 17:05'),
+    -- 9. Missing Lunch 3: 07:12, 14:39, 17:32
+    (@emp_code, '2000-01-09 07:12'),
+    (@emp_code, '2000-01-09 14:39'),
+    (@emp_code, '2000-01-09 17:32'),
+    -- 10. morning+OT: 07:44, 12:01, 12:49, 20:31
+    (@emp_code, '2000-01-10 07:44'),
+    (@emp_code, '2000-01-10 12:01'),
+    (@emp_code, '2000-01-10 12:49'),
+    (@emp_code, '2000-01-10 20:31'),
+    -- 11. morning+MLunch+OT 1: 07:39, 20:11
+    (@emp_code, '2000-01-11 07:39'),
+    (@emp_code, '2000-01-11 20:11'),
+    -- 12. morning+MLunch+OT 2: 07:23, 12:22, 20:58
+    (@emp_code, '2000-01-12 07:23'),
+    (@emp_code, '2000-01-12 12:22'),
+    (@emp_code, '2000-01-12 20:58'),
+    -- 13. morning+MLunch+OT 3: 07:23, 14:02, 20:05
+    (@emp_code, '2000-01-13 07:23'),
+    (@emp_code, '2000-01-13 14:02'),
+    (@emp_code, '2000-01-13 20:05'),
+    -- 14. morning+MLunch+early: 07:21, 02:08 (Next Day)
+    (@emp_code, '2000-01-14 07:21'),
+    (@emp_code, '2000-01-15 02:08'),
+    -- 15. Half Day Morning 1: 07:41, 12:35
+    (@emp_code, '2000-01-15 07:41'),
+    (@emp_code, '2000-01-15 12:35'),
+    -- 16. Half Day Morning 2: 07:41, 12:23, 12:51
+    (@emp_code, '2000-01-16 07:41'),
+    (@emp_code, '2000-01-16 12:23'),
+    (@emp_code, '2000-01-16 12:51'),
+    -- 17. Half Day Afternoon 1: 12:30, 17:05
+    (@emp_code, '2000-01-17 12:30'),
+    (@emp_code, '2000-01-17 17:05'),
+    -- 18. Half Day Afternoon 2: 12:20, 12:50, 17:21
+    (@emp_code, '2000-01-18 12:20'),
+    (@emp_code, '2000-01-18 12:50'),
+    (@emp_code, '2000-01-18 17:21'),
+    -- 19. Late Morning: 08:20, 12:10, 13:01, 17:05
+    (@emp_code, '2000-01-19 08:20'),
+    (@emp_code, '2000-01-19 12:10'),
+    (@emp_code, '2000-01-19 13:01'),
+    (@emp_code, '2000-01-19 17:05'),
+    -- 20. Late Lunch: 07:30, 12:01, 13:23, 17:03
+    (@emp_code, '2000-01-20 07:30'),
+    (@emp_code, '2000-01-20 12:01'),
+    (@emp_code, '2000-01-20 13:23'),
+    (@emp_code, '2000-01-20 17:03'),
+    -- 21. Spam Morning: 07:50, 08:02, 08:05, 17:05
+    (@emp_code, '2000-01-21 07:50'),
+    (@emp_code, '2000-01-21 08:02'),
+    (@emp_code, '2000-01-21 08:05'),
+    (@emp_code, '2000-01-21 17:05'),
+    -- 22. Spam Lunch Out: 07:30, 11:54, 12:05, 12:10, 17:09
+    (@emp_code, '2000-01-22 07:30'),
+    (@emp_code, '2000-01-22 11:54'),
+    (@emp_code, '2000-01-22 12:05'),
+    (@emp_code, '2000-01-22 12:10'),
+    (@emp_code, '2000-01-22 17:09'),
+    -- 23. Absent 1: 07:31
+    (@emp_code, '2000-01-23 07:31'),
+    -- 24. Absent 2: 17:30
+    (@emp_code, '2000-01-24 17:30'),
+    -- 25. Absent 3: 17:30, 20:02
+    (@emp_code, '2000-01-25 17:30'),
+    (@emp_code, '2000-01-25 20:02'),
+    -- 26. Absent 4: 20:02
+    (@emp_code, '2000-01-26 20:02'),
+    -- 27. Absent 5: 12:01, 13:01
+    (@emp_code, '2000-01-27 12:01'),
+    (@emp_code, '2000-01-27 13:01'),
+    -- 28. Absent 6: 11:15
+    (@emp_code, '2000-01-28 11:15');

@@ -142,11 +142,17 @@ select if(
     `v`.`dateAt` AS `dateAt`,
     `v`.`scanCode` AS `scanCode`,
     `v`.`early` AS `early`,
+    time_to_sec(`v`.`early`) / 60 AS `early_min`,
     `v`.`morning` AS `morning`,
+    time_to_sec(`v`.`morning`) / 60 AS `morning_min`,
     `v`.`lunch_out` AS `lunch_out`,
+    time_to_sec(`v`.`lunch_out`) / 60 AS `lunch_out_min`,
     `v`.`lunch_in` AS `lunch_in`,
+    time_to_sec(`v`.`lunch_in`) / 60 AS `lunch_in_min`,
     `v`.`evening` AS `evening`,
+        time_to_sec(`v`.`evening`) / 60 AS `evening_min`,
     `v`.`night` AS `night`,
+    time_to_sec(`v`.`night`) / 60 AS `night_min`,
     `v`.`count` AS `count`,
     `v`.`rawTime` AS `rawTime`
 from `vDailyTime` `v`;
