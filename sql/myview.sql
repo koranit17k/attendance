@@ -34,16 +34,34 @@ select a.status,
         ELSE 0
     END AS late_morning_minutes,
     -- Late Lunch
-    CASE
-        WHEN a.lunch_out_min IS NOT NULL
-        AND a.lunch_in_min IS NOT NULL
-        AND (
-            a.lunch_in_min - a.lunch_out_min
-        ) > 60 THEN (
-            a.lunch_in_min - a.lunch_out_min
-        ) - 60
-        ELSE 0
-    END AS late_lunch_minutes,
+    (
+        CASE
+            WHEN a.day_case = '1.เช้า-เย็น'
+            AND a.lunch_case = '1.ไม่พักเที่ยง' THEN 240
+            WHEN a.day_case = '1.เช้า-เย็น'
+            AND a.lunch_case = '3.สแกนครั้งเดียว' THEN 120
+            WHEN a.lunch_out_min IS NOT NULL
+            AND a.lunch_in_min IS NOT NULL
+            AND (
+                a.lunch_in_min - a.lunch_out_min
+            ) > 60 THEN (
+                a.lunch_in_min - a.lunch_out_min
+            ) - 60
+            ELSE 0
+        END
+    ) + (
+        CASE
+            -- Only if NOT Night shift and NOT Early shift (leaving next morning)
+            WHEN a.night_min IS NULL
+            AND a.early_min IS NULL
+            AND (
+                a.day_case = '1.เช้า-เย็น'
+                OR a.day_case = '3.เย็นขาเดียว'
+            )
+            AND a.evening_min < 1020 THEN 1020 - a.evening_min -- 1020 = 17:00
+            ELSE 0
+        END
+    ) AS late_lunch_minutes,
     -- Work Minutes
     CASE
         -- Case 1: Full Day (Morning - Evening/Night)
@@ -73,28 +91,19 @@ select a.status,
         WHEN a.day_case = '2.เช้าขาเดียว' THEN CASE
             WHEN a.lunch_out_min IS NOT NULL THEN LEAST(
                 240,
-                GREATEST(
-                    0,
-                    a.lunch_out_min - GREATEST(COALESCE(a.morning_min, 480), 480)
-                )
+                a.lunch_out_min - GREATEST(a.morning_min, 480)
             )
             ELSE 0
         END -- Case 3: Evening Only
         WHEN a.day_case = '3.เย็นขาเดียว' THEN CASE
             WHEN a.lunch_in_min IS NOT NULL THEN LEAST(
                 240,
-                GREATEST(
-                    0,
-                    1020 - a.lunch_in_min -- 1020 = 17:00
-                )
+                1020 - a.lunch_in_min -- 1020 = 17:00
             )
             WHEN a.lunch_out_min IS NOT NULL THEN -- Fallback
             LEAST(
                 240,
-                GREATEST(
-                    0,
-                    1020 - a.lunch_out_min
-                )
+                1020 - a.lunch_out_min
             )
             ELSE 0
         END

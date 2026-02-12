@@ -102,7 +102,7 @@ WITH expected_values AS (
         'morning+MLunch+OT 3',
         360,
         0,
-        123,
+        125,
         0,
         120
     UNION ALL
@@ -148,11 +148,11 @@ WITH expected_values AS (
     UNION ALL
     SELECT 19,
         'Late Morning',
-        460,
+        455,
         51,
         0,
         20,
-        0
+        5
     UNION ALL
     SELECT 20,
         'Late Lunch',
@@ -164,11 +164,11 @@ WITH expected_values AS (
     UNION ALL
     SELECT 21,
         'Spam Morning',
-        235,
+        230,
         0,
         0,
         5,
-        240
+        245
     UNION ALL
     SELECT 22,
         'Spam Lunch Out',
@@ -225,6 +225,14 @@ WITH expected_values AS (
         0,
         0,
         0
+    UNION ALL
+    SELECT 29,
+        'Normal 3',
+        450,
+        60,
+        0,
+        0,
+        30
 ),
 actual_values AS (
     SELECT DAY(dateAt) AS id,
@@ -288,7 +296,18 @@ SELECT e.id,
             e.exp_lunch,
             ')'
         )
-    END AS lunch_check
+    END AS lunch_check,
+    -- Late2 Check (Late Lunch + Early Leave)
+    CASE
+        WHEN COALESCE(a.late_lunch_minutes, 0) = e.exp_late2 THEN 'PASS'
+        ELSE CONCAT(
+            'FAIL (Got ',
+            COALESCE(a.late_lunch_minutes, 0),
+            ', Exp ',
+            e.exp_late2,
+            ')'
+        )
+    END AS late2_check
 FROM expected_values e
     LEFT JOIN actual_values a ON e.id = a.id
 ORDER BY e.id;
