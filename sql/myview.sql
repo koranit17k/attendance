@@ -26,9 +26,9 @@ SELECT a.status,
     END AS lunch_minutes,
     -- Late Morning (Late1)
     CASE
-        WHEN a.status = '3' THEN 0 --เมื่อ ... เป็นจริง ค่าจะ = 0
+        WHEN a.status = '3' THEN 0 -- เมื่อ ... เป็นจริง ค่าจะ = 0
         WHEN a.morning_min IS NOT NULL
-        AND a.morning_min > 480 THEN a.morning_min - 480 --เมื่อเข้าเช้ามากกว่า 480 นาที(8.00น) จะนำมาลบกับ 480 เพื่อคำนวนเวลาที่สาย
+        AND a.morning_min > 480 THEN a.morning_min - 480 -- เมื่อเข้าเช้ามากกว่า 480 นาที(8.00น) จะนำมาลบกับ 480 เพื่อคำนวนเวลาที่สาย
         ELSE 0 -- ถาไม่เข้าเงื่อนไข(เช้า>480) ให้ = 0
     END AS late_morning_minutes,
     -- Late Lunch / Early Departure (Late2)
@@ -45,7 +45,7 @@ SELECT a.status,
                 AND a.lunch_in_min IS NOT NULL
                 AND (a.lunch_in_min - a.lunch_out_min) > 60 THEN (a.lunch_in_min - a.lunch_out_min) - 60 -- เมื่อพักเที่ยงมากกว่า 60 นาที ให้แสดงค่าเวลา late(พักเที่ยง-60 เช่น(72-60 = 12 นาที))
                 WHEN a.day_case = '3.เย็นขาเดียว'
-                AND a.lunch_in_min > 780 THEN a.lunch_in_min - 780 --คือสาย เมื่อเย็นขาเดียวและเข้างานหลัง 13.00 น. ให้แสดงค่าเวลา late(เข้างาน-780 เช่น เข้า 13.20(800-780 = 20 นาที))
+                AND a.lunch_in_min > 780 THEN a.lunch_in_min - 780 -- คือสาย เมื่อเย็นขาเดียวและเข้างานหลัง 13.00 น. ให้แสดงค่าเวลา late(เข้างาน-780 เช่น เข้า 13.20(800-780 = 20 นาที))
                 ELSE 0 -- ถ้าไม่เข้าเงื่อนไขไหนให้ = 0 (พักปกติ,ถ้าไม่พักเกิน 60 นาทีหรือ ไม่เข้างานสาย )
             END
         ) + (
@@ -66,56 +66,65 @@ SELECT a.status,
         )
     END AS late_lunch_minutes,
     -- Work Minutes (Potential - Late1 - Late2)
-        CASE
-            WHEN a.status = '3'
-            OR a.day_case = '4.ไม่มี' THEN 0
-            WHEN a.day_case = '1.เช้า-เย็น' THEN GREATEST(
-                0, -- ทำให้ค่าไม่ต่ำกว่า 0 (ไม่ติดลบ ซึ่งในความจริงไม่ควรมีอยู่แล้ว)
-                480 - (
-                    CASE -- late1
-                        WHEN a.morning_min IS NOT NULL
-                        AND a.morning_min > 480 THEN a.morning_min - 480
-                        ELSE 0
-                    END
-                ) - (
+    CASE
+        -- แบ่งเคสคิด work minutes
+        WHEN a.status = '3'
+        OR a.day_case = '4.ไม่มี' THEN 0 -- ถ้าเคสคิดไม่ได้ขึ้น 0
+        WHEN a.day_case = '1.เช้า-เย็น' THEN GREATEST(
+            0,
+            -- ทำให้ค่าไม่ต่ำกว่า 0 (ไม่ติดลบ ซึ่งในความจริงไม่ควรมีอยู่แล้ว)
+            480 - (
+                -- เวลาไม่เกิน 480 นาที (480 = 8ชม)
+                CASE
+                    -- late1
+                    WHEN a.morning_min IS NOT NULL
+                    AND a.morning_min > 480 THEN a.morning_min - 480 -- คิด late ถ้าเข้าหลัง 8.00 ก็จะได้เวลาที่ late 
+                    ELSE 0 -- ถ้าไม่สาย ค่า = 0
+                END
+            ) - (
+                -- คิด late จากข้างบน แล้วก็ค่อยมา - กับ เวลาทำงานข้างล่าง
                 (
                     CASE
                         WHEN a.day_case = '1.เช้า-เย็น'
-                        AND a.lunch_case = '1.ไม่พักเที่ยง' THEN 240
+                        AND a.lunch_case = '1.ไม่พักเที่ยง' THEN 240 -- เข้าออกเช้าเย็น ไม่พักเที่ยงหัก 240
                         WHEN a.day_case = '1.เช้า-เย็น'
-                        AND a.lunch_case = '3.สแกนครั้งเดียว' THEN 120
+                        AND a.lunch_case = '3.สแกนครั้งเดียว' THEN 120 -- เข้าออกเช้าเย็น สแกนครั้งเดียวหัก 120
                         WHEN a.lunch_out_min IS NOT NULL
                         AND a.lunch_in_min IS NOT NULL
-                        AND (a.lunch_in_min - a.lunch_out_min) > 60 THEN (a.lunch_in_min - a.lunch_out_min) - 60
-                        ELSE 0
+                        AND (a.lunch_in_min - a.lunch_out_min) > 60 THEN (a.lunch_in_min - a.lunch_out_min) - 60 -- เมื่อมีพักเที่ยง>60 นาที ให้คำนวนlate พักเที่ยง (เวลาพักเที่ยง - 60 =เวลาที่late)
+                        ELSE 0 -- ถ้าไม่เข้าเคสไหนหรือพักเที่ยงไม่เกิน 60 นาที ค่า = 0
                     END
                 ) + (
                     CASE
                         WHEN a.night_min IS NULL
                         AND a.early_min IS NULL
                         AND (
-                            a.day_case = '1.เช้า-เย็น'
-                            OR a.day_case = '3.เย็นขาเดียว'
+                            a.day_case = '1.เช้า-เย็น' -- เช้าเย็นปกติ
+                            OR a.day_case = '3.เย็นขาเดียว' -- หรือเย็นขาเดียว
                         )
-                        AND a.evening_min < 1020 THEN 1020 - a.evening_min
-                        ELSE 0
+                        AND a.evening_min < 1020 THEN 1020 - a.evening_min -- คิด late ถ้าออกก่อน 17.00 น. (1020นาที)
+                        ELSE 0 -- ถ้าไม่ออกก่อน 17.00 น. ค่า = 0 คือไม่lateนั้นแหละ
                     END
                 )
             )
         )
         WHEN a.day_case = '2.เช้าขาเดียว' THEN GREATEST(
+            -- ทำงานครึ่งวันเช้า (ไม่มีเย็น)
             0,
+            -- ทำให้ค่าไม่ต่ำกว่า 0 (ไม่ติดลบ ซึ่งในความจริงไม่ควรมีอยู่แล้ว)
             240 - (
+                -- จำกัดเวลาที่แสดงไม่เกิน 240 นาที หรือ 4ชม ครึ่งวันพอดี
                 CASE
                     WHEN a.morning_min IS NOT NULL
-                    AND a.morning_min > 480 THEN a.morning_min - 480
-                    ELSE 0
+                    AND a.morning_min > 480 THEN a.morning_min - 480 -- คิดlateเช้าหากเข้าหลัง 8 โมง(a.morning_min > 480)
+                    ELSE 0 -- ถ้าเข้าก่อน 8 โมง,ไม่ late ค่า = 0
                 END
             ) - (
                 GREATEST(
                     0,
-                    GREATEST(720, a.morning_min + 240) - a.lunch_out_min
-                )
+                    -- ไม่ต่ำกว่า 0
+                    GREATEST(720, a.morning_min + 240) - a.lunch_out_min -- 720 คือ 12.00 คิดเวลาทำงานถึงเที่ยง 4 ชม (ทำงานหลังเวลา 12.00 ไม่คิดเวลาทำงาน) 
+                ) -- - a.lunch_out_min ไว้คำนวน ออกก่อน หรือ late ถ้าหาก - กันไม่ลง 0 พอดี เช่นเข้า 8.01(481) ออก 12.00(720) ตามสูตร (481+240)720=1
             )
         )
         WHEN a.day_case = '3.เย็นขาเดียว' THEN GREATEST(

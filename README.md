@@ -2,6 +2,41 @@
 
 ## โครงการ ระบบบันทึกเวลาเข้า-ออกงาน
 
+### ขั้นตอนการทำงาน
+
+- กำหนดหัวข้อโปรเจค ระบบบันทึกเวลาเข้า-ออกงาน
+- กำหนดรายละเอียดเงื่อนไข เวลาเข้า-ออกงาน
+- ไดรับฐานข้อมูล เช็คข้อมูล กำหนด กลุ่มของข้อมูล (เคสที่คิดเวลาทำงานได้(1.เคสเขียว), เคสทำงานครึ่งวัน(2.เคสเหลือง) และ เคสที่ไม่สามารถคิดเวลาได้(3.เคสแดง))
+- ความถูกต้องของข้อมูล
+- คำนวณเวลางาน รวมถึง สาย และ OT
+- จัดทำ Test Case scenarios เพื่อทดสอบความถูกต้องของข้อมูล
+- จัดทำ Report
+
+## Database Project Structure
+
+```
+./attendance
+  ├── README.md                  # README for Dev & Ai
+  ├──/report                     # Jasper Report
+  │   └── *.jrxml                # JRXML Source Files
+  │   ├── A01.pdf                # Check Daily Time
+  │   ├── A02.pdf                # Check summary persoanl
+  │   └── A03.pdf                # Check monthly summary
+  ├──/sql                        # SQL Script
+  │   ├── database.sql           # Create Database & User
+  │   ├── table.sql              # Create Table
+  │   ├── view.sql               # Create View
+  │   ├── myview.sql             # Create view for use calculator
+  │   ├── 1.seed_test_data.sql   # Create test data
+  │   ├── 2.check_results.sql    # Check test data
+  │   └── 3.cleartest.sql        # Clear test data
+  └──/script                     # Script
+      ├── init-db.sh             # Initialize Database
+      ├── restore.sh             # Restore Database
+      └── backup.sh              # Backup Database
+
+```
+
 ## . Attendance Rules
 
 ## การคำนวณเวลางาน
@@ -61,7 +96,7 @@
 
 ## รายงานเวลางาน แยกบริษัท
 
-### รายงานตรวจสอบประจำวัน (Daily Inspection Report)
+### A01 รายงานตรวจสอบประจำวัน (Daily Inspection Report)
 
 > **วัตถุประสงค์:** ตรวจสอบความถูกต้องของการบันทึกเวลาประจำวันของพนักงานทุกคน
 
@@ -80,7 +115,7 @@
 
 ---
 
-### รายงานตรวจสอบรายบุคคล (Individual Inspection Report)
+### A02 รายงานตรวจสอบรายบุคคล (Individual Inspection Report)
 
 > **วัตถุประสงค์:** แสดงรายละเอียดการทำงานของพนักงานรายบุคคลตลอดทั้งเดือน เพื่อใช้ตรวจสอบก่อนคำนวณเงินเดือน หรือใช้เป็นหลักฐานการทำงาน
 
@@ -100,7 +135,7 @@
 
 ---
 
-### รายงานสรุปประจำเดือน (Monthly Summary Report) \*
+### A03 รายงานสรุปประจำเดือน (Monthly Summary Report) \*
 
 > **วัตถุประสงค์:** สรุปภาพรวมการทำงานของพนักงานทุกคนในเดือนนั้น
 
@@ -115,7 +150,7 @@
 
 ---
 
-### รายงานวิเคราะห์พนักงาน (Employee Analysis Report) \*
+### A04 รายงานวิเคราะห์พนักงาน (Employee Analysis Report) \*
 
 > **วัตถุประสงค์:** วิเคราะห์พฤติกรรมการมาทำงานของพนักงาน เพื่อระบุแนวโน้ม เช่น การมาสายบ่อย, การกลับก่อน, หรือรูปแบบการสแกนนิ้วที่มีปัญหาซ้ำๆ
 
@@ -125,50 +160,42 @@
 - **รายการพนักงานที่น่าจับตามอง (Watchlist):**
   - จำนวนครั้งที่เข้างานสาย
   - จำนวนครั้งที่มีสถานะ Red/Yellow
-  - ค่าเฉลี่ยเวลาเข้างาน (Average Morning Scan)
-  - แนวโน้มการทำงานล่วงเวลา (OT Trend)
+  - ค่าเฉลี่ยเวลาเข้างาน
+  - แนวโน้มการทำงานล่วงเวลา
 
 ---
 
-### รายงานวิเคราะห์บริษัท (Company Analysis Report) \*
+### A05 รายงานวิเคราะห์ทั้งบริษัท (Company Analysis Report) \*
 
 > **วัตถุประสงค์:** สรุปภาพรวมประสิทธิภาพทรัพยากรบุคคลของทั้งบริษัท เพื่อดูแนวโน้มการเข้างานในแต่ละวัน และประสิทธิภาพการจัดการเวลางาน
 
-**โครงร่างข้อมูล**
+**โครงร่างข้อมูล** ภาพรวมพนักงาน
 
-- **รายการพนักงาน:**
-  - รหัส/ชื่อสกุล
-  - จำนวนวันทำงานปกติ (Working Days)
-  - จำนวนชั่วโมงงานรวม (Total Work Hours)
-  - จำนวนชั่วโมง OT รวม (Total OT Hours)
-  - จำนวนนาทีสายรวม (Total Late Minutes)
-  - \*จำนวนวันขาดงาน/ลากิจ/ลาป่วย (count by type)
+- KPI Summary (5 ตัว)
+  - จำนวนพนักงานทั้งหมด
+  - % การมาทำงาน (Attendance Rate)
+  - % ขาดงาน
+  - ชั่วโมงทำงานรวม (Total Work Hours)
+  - ชั่วโมง OT รวม
 
-- **กราฟ/ตารางรายวัน:**
-  - จำนวนพนักงานที่มาทำงาน
-  - จำนวนพนักงานที่มาสาย
-  - จำนวนพนักงานที่ทำ OT
-- **สัดส่วนสถานะ (Pie Chart):** Percentage of Green vs Yellow vs Red cases
+- แนวโน้มรายวัน หรือ รายเดือน
+  - Line Chart → % การมาทำงานรายวัน
+  - Bar Chart → จำนวน “ขาด / ลา / สาย” ต่อเดือน
+  - Filter → ปี / เดือน / บริษัท
 
-## Database Project Structure
+- ประสิทธิภาพเวลา
+  - Metric สำคัญ
+    - นาทีสายเฉลี่ยต่อวัน
+    - OT เฉลี่ยต่อคน
+    - Distribution ชั่วโมงทำงาน (Normal vs OT)
+  - Visual แนะนำ
+    - Stacked Bar → Work Hours vs OT
+    - Column Chart → Avg Late Minutes by Day of Week
 
-```
-./project
-  ├── README.md             # README for Dev & Ai
-  ├──/report                # Jasper Report
-  │   └── *.jrxml           # JRXML Source Files
-  ├──/sql                   # SQL Script
-  │   ├── 01.db-user.sql     # Create Database & User
-  │   ├── 02.table.sql       # Create Table
-  │   ├── 03.view.sql        # Create View
-  │   ├── 04.procedure.sql   # Create Procedure
-  │   └── 05.event.sql       # Create Event
-  └──/script                # Script
-      ├── init-db.sh        # Initialize Database
-      ├── restore.sh        # Restore Database
-      └── backup.sh         # Backup Database
-
-```
+- เปรียบเทียบหน่วยงาน
+  - Attendance Rate by Department
+  - Heatmap การมาทำงานตามวันในสัปดาห์
+  - OT by Company (ถ้ามีหลายบริษัท)
 
 ### สรุปเคสการคำนวณเวลาทำงาน (แบ่ง 3 เคสใหญ่)
 
