@@ -35,7 +35,10 @@ SELECT b.status,
   /* late_lunch_minutes (รวม 2 ก้อนที่เคยซ้ำ: lunch_penalty_base + miss_evening_base) */
   CASE
     WHEN b.status = '3' THEN 0
-    ELSE b.lunch_penalty_base + b.miss_evening_base
+    WHEN b.day_case = '1.เช้า-เย็น' THEN b.lunch_penalty_base + b.miss_evening_base
+    WHEN b.day_case = '2.เช้าขาเดียว' THEN b.morning_halfday_penalty_base
+    WHEN b.day_case = '3.เย็นขาเดียว' THEN b.evening_halfday_penalty_base + b.miss_evening_base
+    ELSE 0
   END AS late_lunch_minutes,
   /* work_minutes (เอาก้อนเดิมมาใช้ซ้ำจาก base) */
   CASE
@@ -177,11 +180,13 @@ FROM (
                 OR v.lunch_in IS NOT NULL
               )
               AND (
-                v.morning IS NULL
-                XOR v.evening IS NULL
-              )
-              AND v.night IS NULL
-              AND v.early IS NULL,
+                v.morning IS NOT NULL
+                XOR (
+                  v.evening IS NOT NULL
+                  OR v.night IS NOT NULL
+                  OR v.early IS NOT NULL
+                )
+              ),
               '2',
               '3'
             )
