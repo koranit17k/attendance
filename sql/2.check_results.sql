@@ -271,16 +271,18 @@ WITH expected_values AS (
         0
 ),
 actual_values AS (
-    SELECT DAY(dateAt) AS id,
-        work_minutes,
-        lunch_minutes,
-        ot_total_minutes,
-        late_morning_minutes,
-        late_lunch_minutes
-    FROM vAttendanceMinutes
-    WHERE scanCode = '99999'
-        AND YEAR(dateAt) = 2000
-        AND MONTH(dateAt) = 1
+    SELECT DAY(a.dateAt) AS id,
+        a.work_minutes,
+        a.lunch_minutes,
+        a.ot_total_minutes,
+        a.late_morning_minutes,
+        a.late_lunch_minutes
+    FROM attendance a
+        JOIN employee e ON a.comCode = e.comCode
+        AND a.empCode = e.empCode
+    WHERE e.scanCode = '99999'
+        AND YEAR(a.dateAt) = 2000
+        AND MONTH(a.dateAt) = 1
 )
 SELECT e.id,
     e.scenario,

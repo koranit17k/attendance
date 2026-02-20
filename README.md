@@ -10,6 +10,7 @@
 - ความถูกต้องของข้อมูล
 - คำนวณเวลางาน รวมถึง สาย และ OT
 - จัดทำ Test Case scenarios เพื่อทดสอบความถูกต้องของข้อมูล
+- สร้าง attendance_clean table เพื่อใช้ในการปรับแก้ข้อมูล
 - จัดทำ Report
 
 ## Database Project Structure
