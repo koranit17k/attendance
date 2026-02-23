@@ -31,7 +31,8 @@ select
         and b.lunch_in_min is not null then greatest(60, b.lunch_break_min)
         else 60
     end as lunch_minutes,
-    /* late_morning_minutes (ใช้ b.late_morning_base) */
+    /* late_morning_minutes
+    (ใช้ b.late_morning_base) */
     case
         when b.status = '3' then 0
         else b.late_morning_base
