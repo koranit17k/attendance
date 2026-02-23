@@ -175,6 +175,7 @@ create table `users` (
 create table `attendance` (
     `comCode` varchar(2) not null,
     `empCode` smallint(5) unsigned not null,
+    `scanCode` varchar(5) default null COMMENT 'รหัสสแกนลายนิ้วมือ',
     `dateAt` varchar(10) not null COMMENT 'วันเดือนปีทำงาน',
     `status` varchar(20) default null COMMENT 'สถานะ',
     `day_case` varchar(13) default null COMMENT 'ดูวัน',

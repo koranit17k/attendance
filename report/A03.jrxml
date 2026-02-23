@@ -61,7 +61,7 @@
     e.name as employee_name,
     c.comName as company_name,
     s.name as scanName
-FROM vAttendanceMinutes v
+FROM attendance v
     left join scancode s on v.scanCode = s.scanCode
     left join employee e on v.scanCode = e.scanCode
     left  join company c on e.comCode = c.comCode
@@ -71,90 +71,159 @@ Where STR_TO_DATE(v.dateAt, '%Y-%m-%d') BETWEEN
       STR_TO_DATE(CONCAT($P!{pYear}, '-', LPAD($P!{pMonth},2,'0'), '-01'), '%Y-%m-%d')
   )
 ORDER BY ecom, scancode]]></query>
-	<field name="status" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="status"/>
-		<property name="com.jaspersoft.studio.field.label" value="status"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="v"/>
+	<field name="comCode" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="comCode"/>
+		<property name="com.jaspersoft.studio.field.label" value="comCode"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="empCode" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="empCode"/>
+		<property name="com.jaspersoft.studio.field.label" value="empCode"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="scanCode" class="java.lang.String">
+		<description><![CDATA[รหัสสแกนลายนิ้วมือ]]></description>
 		<property name="com.jaspersoft.studio.field.name" value="scanCode"/>
 		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="timecard"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="dateAt" class="java.lang.String">
+		<description><![CDATA[วันเดือนปีทำงาน]]></description>
 		<property name="com.jaspersoft.studio.field.name" value="dateAt"/>
 		<property name="com.jaspersoft.studio.field.label" value="dateAt"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="dim_date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="status" class="java.lang.String">
+		<description><![CDATA[สถานะ]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="status"/>
+		<property name="com.jaspersoft.studio.field.label" value="status"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="day_case" class="java.lang.String">
+		<description><![CDATA[ดูวัน]]></description>
 		<property name="com.jaspersoft.studio.field.name" value="day_case"/>
 		<property name="com.jaspersoft.studio.field.label" value="day_case"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="v"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="lunch_case" class="java.lang.String">
+		<description><![CDATA[ดูพักเที่ยง]]></description>
 		<property name="com.jaspersoft.studio.field.name" value="lunch_case"/>
 		<property name="com.jaspersoft.studio.field.label" value="lunch_case"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="v"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="night_case" class="java.lang.String">
+		<description><![CDATA[ดูค่ำ]]></description>
 		<property name="com.jaspersoft.studio.field.name" value="night_case"/>
 		<property name="com.jaspersoft.studio.field.label" value="night_case"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="v"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="early" class="java.lang.String">
+		<description><![CDATA[เวลาออก ข้ามวัน 00:00 - 06:00 (last)]]></description>
 		<property name="com.jaspersoft.studio.field.name" value="early"/>
 		<property name="com.jaspersoft.studio.field.label" value="early"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="v"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="morning" class="java.lang.String">
+		<description><![CDATA[เวลาเข้า เช้า 06:00 - 10:00 (last)]]></description>
 		<property name="com.jaspersoft.studio.field.name" value="morning"/>
 		<property name="com.jaspersoft.studio.field.label" value="morning"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="v"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="lunch_out" class="java.lang.String">
+		<description><![CDATA[เวลาพักเที่ยง 11:00 - 13:30 (first)]]></description>
 		<property name="com.jaspersoft.studio.field.name" value="lunch_out"/>
 		<property name="com.jaspersoft.studio.field.label" value="lunch_out"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="v"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="lunch_in" class="java.lang.String">
+		<description><![CDATA[เวลากลับเที่ยง 11:30 - 14:00 (last)]]></description>
 		<property name="com.jaspersoft.studio.field.name" value="lunch_in"/>
 		<property name="com.jaspersoft.studio.field.label" value="lunch_in"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="v"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="evening" class="java.lang.String">
+		<description><![CDATA[เวลาออก เย็น 16:00 - 18:00 (last)]]></description>
 		<property name="com.jaspersoft.studio.field.name" value="evening"/>
 		<property name="com.jaspersoft.studio.field.label" value="evening"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="v"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="night" class="java.lang.String">
+		<description><![CDATA[เวลาออก ค่ำ 19:00 - 24:00 (last)]]></description>
 		<property name="com.jaspersoft.studio.field.name" value="night"/>
 		<property name="com.jaspersoft.studio.field.label" value="night"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="v"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
-	<field name="lunch_minutes" class="java.math.BigDecimal">
+	<field name="lunch_minutes" class="java.lang.Integer">
+		<description><![CDATA[จำนวนนาทีพักกลางวัน]]></description>
 		<property name="com.jaspersoft.studio.field.name" value="lunch_minutes"/>
 		<property name="com.jaspersoft.studio.field.label" value="lunch_minutes"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="v"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
-	<field name="late_morning_minutes" class="java.math.BigDecimal">
+	<field name="late_morning_minutes" class="java.lang.Integer">
+		<description><![CDATA[จำนวนนาทีมาสาย เช้า]]></description>
 		<property name="com.jaspersoft.studio.field.name" value="late_morning_minutes"/>
 		<property name="com.jaspersoft.studio.field.label" value="late_morning_minutes"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="v"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
-	<field name="late_lunch_minutes" class="java.math.BigDecimal">
+	<field name="late_lunch_minutes" class="java.lang.Integer">
+		<description><![CDATA[จำนวนนาทีมาสาย บ่าย/เที่ยง/ออกก่อนเวลางาน]]></description>
 		<property name="com.jaspersoft.studio.field.name" value="late_lunch_minutes"/>
 		<property name="com.jaspersoft.studio.field.label" value="late_lunch_minutes"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="v"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
-	<field name="work_minutes" class="java.math.BigDecimal">
+	<field name="work_minutes" class="java.lang.Integer">
+		<description><![CDATA[จำนวนนาทีทำงาน]]></description>
 		<property name="com.jaspersoft.studio.field.name" value="work_minutes"/>
 		<property name="com.jaspersoft.studio.field.label" value="work_minutes"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="v"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
-	<field name="ot_total_minutes" class="java.math.BigDecimal">
+	<field name="ot_total_minutes" class="java.lang.Integer">
+		<description><![CDATA[จำนวนนาทีล่วงเวลา]]></description>
 		<property name="com.jaspersoft.studio.field.name" value="ot_total_minutes"/>
 		<property name="com.jaspersoft.studio.field.label" value="ot_total_minutes"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="v"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="count" class="java.lang.Integer">
+		<description><![CDATA[จำนวนครั้งที่สแกน]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="count"/>
+		<property name="com.jaspersoft.studio.field.label" value="count"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="rawTime" class="java.lang.String">
+		<description><![CDATA[เวลาที่สแกน]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="rawTime"/>
+		<property name="com.jaspersoft.studio.field.label" value="rawTime"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="reason" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="reason"/>
+		<property name="com.jaspersoft.studio.field.label" value="reason"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="status_check" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="status_check"/>
+		<property name="com.jaspersoft.studio.field.label" value="status_check"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="modified_by" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="modified_by"/>
+		<property name="com.jaspersoft.studio.field.label" value="modified_by"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="modified_at" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="modified_at"/>
+		<property name="com.jaspersoft.studio.field.label" value="modified_at"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="approved_by" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="approved_by"/>
+		<property name="com.jaspersoft.studio.field.label" value="approved_by"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="approved_at" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="approved_at"/>
+		<property name="com.jaspersoft.studio.field.label" value="approved_at"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="ecom" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="comCode"/>

@@ -4,6 +4,7 @@ insert ignore into
     attendance (
         comCode,
         empCode,
+        scanCode,
         dateAt,
         early,
         morning,
@@ -17,6 +18,7 @@ insert ignore into
 select
     e.comCode,
     e.empCode,
+    v.scanCode,
     v.dateAt,
     v.early,
     v.morning,
