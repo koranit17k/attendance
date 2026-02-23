@@ -14,7 +14,7 @@
                 "keywordCase": "lower",
                 "identifierCase": "preserve",
                 "functionCase": "lower",
-                "expressionWidth": 50
+                "expressionWidth": 500
             }
         }
     ]

@@ -14,22 +14,10 @@ create table `company` (
 ) ENGINE = InnoDB default CHARSET = utf8mb4 collate = utf8mb4_general_ci COMMENT = 'บริษัท-ข้อมูลของแต่ละบริษัท';
 
 -- payroll.deduction definition
-create table `deduction` (
-    `costPercent` decimal(4, 2) default null COMMENT 'หักค่าใช้จ่าย %',
-    `costLimit` mediumint(8) unsigned default 0 COMMENT 'หักค่าใช้จ่ายไม่เกิน',
-    `deductSelf` mediumint(8) unsigned default 0 COMMENT 'ค่าลดหย่อนส่วนตัว',
-    `deductSpouse` mediumint(8) unsigned default 0 COMMENT 'ค่าลดหย่อนคู่สมรส',
-    `deductChild` mediumint(8) unsigned default 0 COMMENT 'ค่าลดหย่อนบุตรธิดา',
-    `deductChildEdu` mediumint(8) unsigned default 0 COMMENT 'ค่าลดหย่อนบุตรธิดา กำลังศึกษา'
-) ENGINE = InnoDB default CHARSET = utf8mb4 collate = utf8mb4_general_ci COMMENT = 'ประเภทเงินหักลดหย่อน ของกรมสรรพากร';
+create table `deduction` (`costPercent` decimal(4, 2) default null COMMENT 'หักค่าใช้จ่าย %', `costLimit` mediumint(8) unsigned default 0 COMMENT 'หักค่าใช้จ่ายไม่เกิน', `deductSelf` mediumint(8) unsigned default 0 COMMENT 'ค่าลดหย่อนส่วนตัว', `deductSpouse` mediumint(8) unsigned default 0 COMMENT 'ค่าลดหย่อนคู่สมรส', `deductChild` mediumint(8) unsigned default 0 COMMENT 'ค่าลดหย่อนบุตรธิดา', `deductChildEdu` mediumint(8) unsigned default 0 COMMENT 'ค่าลดหย่อนบุตรธิดา กำลังศึกษา') ENGINE = InnoDB default CHARSET = utf8mb4 collate = utf8mb4_general_ci COMMENT = 'ประเภทเงินหักลดหย่อน ของกรมสรรพากร';
 
 -- payroll.holiday definition
-create table `holiday` (
-    `comCode` varchar(2) not null,
-    `day` date not null COMMENT 'วันเดือนปีวันหยุด',
-    `name` varchar(40) default null COMMENT 'ชื่อวันหยุด',
-    primary key (`comCode`, `day`)
-) ENGINE = InnoDB default CHARSET = utf8mb4 collate = utf8mb4_general_ci COMMENT = 'รายการวันหยุดประจำปี';
+create table `holiday` (`comCode` varchar(2) not null, `day` date not null COMMENT 'วันเดือนปีวันหยุด', `name` varchar(40) default null COMMENT 'ชื่อวันหยุด', primary key (`comCode`, `day`)) ENGINE = InnoDB default CHARSET = utf8mb4 collate = utf8mb4_general_ci COMMENT = 'รายการวันหยุดประจำปี';
 
 -- payroll.incometype definition
 create table `incometype` (
@@ -57,18 +45,10 @@ create table `logs` (
 ) ENGINE = InnoDB default CHARSET = utf8mb4 collate = utf8mb4_general_ci COMMENT = 'บันทึกการทำงาน';
 
 -- payroll.taxrate definition
-create table `taxrate` (
-    `total` mediumint(8) unsigned not null COMMENT 'เงินได้ไม่เกิน /ปี',
-    `rate` decimal(4, 2) default 0.00 COMMENT 'อัตราภาษีเปอร์เซ็น',
-    primary key (`total`)
-) ENGINE = InnoDB default CHARSET = utf8mb4 collate = utf8mb4_general_ci COMMENT = 'อัตราการคำนวณภาษี';
+create table `taxrate` (`total` mediumint(8) unsigned not null COMMENT 'เงินได้ไม่เกิน /ปี', `rate` decimal(4, 2) default 0.00 COMMENT 'อัตราภาษีเปอร์เซ็น', primary key (`total`)) ENGINE = InnoDB default CHARSET = utf8mb4 collate = utf8mb4_general_ci COMMENT = 'อัตราการคำนวณภาษี';
 
 -- payroll.timecard definition
-create table `timecard` (
-    `scanCode` varchar(5) not null,
-    `scanAt` datetime not null COMMENT 'วันที่และเวลาลงเวลา (ถึงนาที)',
-    primary key (`scanCode`, `scanAt`)
-) ENGINE = InnoDB default CHARSET = utf8mb4 collate = utf8mb4_general_ci COMMENT = 'รายการลงเวลา';
+create table `timecard` (`scanCode` varchar(5) not null, `scanAt` datetime not null COMMENT 'วันที่และเวลาลงเวลา (ถึงนาที)', primary key (`scanCode`, `scanAt`)) ENGINE = InnoDB default CHARSET = utf8mb4 collate = utf8mb4_general_ci COMMENT = 'รายการลงเวลา';
 
 -- payroll.timetype definition
 create table `timetype` (

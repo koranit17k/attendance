@@ -5,14 +5,7 @@ replace
     ALGORITHM = UNDEFINED VIEW `vTimeCard` as
 select
     `timecard`.`scanCode` as `scanCode`,
-    date_format(
-        if (
-            cast(`timecard`.`scanAt` as time) < '06:00',
-            `timecard`.`scanAt` - interval 1 day,
-            `timecard`.`scanAt`
-        ),
-        '%Y-%m-%d'
-    ) as `dateAt`,
+    date_format(if (cast(`timecard`.`scanAt` as time) < '06:00', `timecard`.`scanAt` - interval 1 day, `timecard`.`scanAt`), '%Y-%m-%d') as `dateAt`,
     date_format(`timecard`.`scanAt`, '%H:%i') as `timeAt`
 from
     `timecard`;
@@ -25,13 +18,7 @@ replace
 select
     `vTimeCard`.`dateAt` as `dateAt`,
     `vTimeCard`.`scanCode` as `scanCode`,
-    max(
-        if (
-            `vTimeCard`.`timeAt` < '06:00',
-            `vTimeCard`.`timeAt`,
-            null
-        )
-    ) as `early`,
+    max(if (`vTimeCard`.`timeAt` < '06:00', `vTimeCard`.`timeAt`, null)) as `early`,
     max(
         if (
             `vTimeCard`.`timeAt` >= '06:00'
@@ -64,13 +51,7 @@ select
             null
         )
     ) as `evening`,
-    max(
-        if (
-            `vTimeCard`.`timeAt` >= '19:00',
-            `vTimeCard`.`timeAt`,
-            null
-        )
-    ) as `night`,
+    max(if (`vTimeCard`.`timeAt` >= '19:00', `vTimeCard`.`timeAt`, null)) as `night`,
     count(0) as `count`,
     group_concat(`vTimeCard`.`timeAt` separator ',') as `rawTime`
 from

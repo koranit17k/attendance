@@ -48,18 +48,9 @@ select
     case
         when b.status = '3'
         or b.day_case = '4.ไม่มี' then 0
-        when b.day_case = '1.เช้า-เย็น' then greatest(
-            0,
-            480 - b.late_morning_base - (b.lunch_penalty_base + b.miss_evening_base)
-        )
-        when b.day_case = '2.เช้าขาเดียว' then greatest(
-            0,
-            240 - b.late_morning_base - b.morning_halfday_penalty_base
-        )
-        when b.day_case = '3.เย็นขาเดียว' then greatest(
-            0,
-            240 - b.evening_halfday_penalty_base - b.miss_evening_base
-        )
+        when b.day_case = '1.เช้า-เย็น' then greatest(0, 480 - b.late_morning_base - (b.lunch_penalty_base + b.miss_evening_base))
+        when b.day_case = '2.เช้าขาเดียว' then greatest(0, 240 - b.late_morning_base - b.morning_halfday_penalty_base)
+        when b.day_case = '3.เย็นขาเดียว' then greatest(0, 240 - b.evening_halfday_penalty_base - b.miss_evening_base)
         else 0
     end as work_minutes,
     /* ot_total_minutes (เหมือนเดิม) */
@@ -118,10 +109,7 @@ from
             end as miss_evening_base,
             /* base: เฉพาะ day_case='2.เช้าขาเดียว' ที่เคยซ้ำ */
             case
-                when a.day_case = '2.เช้าขาเดียว' then greatest(
-                    0,
-                    greatest(720, a.morning_min + 240) - a.lunch_out_min
-                )
+                when a.day_case = '2.เช้าขาเดียว' then greatest(0, greatest(720, a.morning_min + 240) - a.lunch_out_min)
                 else 0
             end as morning_halfday_penalty_base,
             /* base: เฉพาะ day_case='3.เย็นขาเดียว' (หลัง 13:00) ที่เคยซ้ำ */
@@ -162,11 +150,7 @@ from
                         v.lunch_out is null
                         and v.lunch_in is null,
                         '1.ไม่พักเที่ยง',
-                        if (
-                            v.lunch_out <> v.lunch_in,
-                            '2.มีพักเที่ยง',
-                            '3.สแกนครั้งเดียว'
-                        )
+                        if (v.lunch_out <> v.lunch_in, '2.มีพักเที่ยง', '3.สแกนครั้งเดียว')
                     ) as lunch_case,
                     if (
                         v.night is null

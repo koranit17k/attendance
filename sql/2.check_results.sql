@@ -324,46 +324,22 @@ select
     -- Work Check
     case
         when coalesce(a.work_minutes, 0) = e.exp_work then 'PASS'
-        else concat(
-            'FAIL (Got ',
-            coalesce(a.work_minutes, 0),
-            ', Exp ',
-            e.exp_work,
-            ')'
-        )
+        else concat('FAIL (Got ', coalesce(a.work_minutes, 0), ', Exp ', e.exp_work, ')')
     end as work_check,
     -- Late1 Check
     case
         when coalesce(a.late_morning_minutes, 0) = e.exp_late1 then 'PASS'
-        else concat(
-            'FAIL (Got ',
-            coalesce(a.late_morning_minutes, 0),
-            ', Exp ',
-            e.exp_late1,
-            ')'
-        )
+        else concat('FAIL (Got ', coalesce(a.late_morning_minutes, 0), ', Exp ', e.exp_late1, ')')
     end as late1_check,
     -- Late2 Check
     case
         when coalesce(a.late_lunch_minutes, 0) = e.exp_late2 then 'PASS'
-        else concat(
-            'FAIL (Got ',
-            coalesce(a.late_lunch_minutes, 0),
-            ', Exp ',
-            e.exp_late2,
-            ')'
-        )
+        else concat('FAIL (Got ', coalesce(a.late_lunch_minutes, 0), ', Exp ', e.exp_late2, ')')
     end as late2_check,
     -- OT Check
     case
         when coalesce(a.ot_total_minutes, 0) = e.exp_ot then 'PASS'
-        else concat(
-            'FAIL (Got ',
-            coalesce(a.ot_total_minutes, 0),
-            ', Exp ',
-            e.exp_ot,
-            ')'
-        )
+        else concat('FAIL (Got ', coalesce(a.ot_total_minutes, 0), ', Exp ', e.exp_ot, ')')
     end as ot_check
 from
     expected_values e

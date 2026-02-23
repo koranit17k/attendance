@@ -1,20 +1,7 @@
 -- insert_attendance.sql
 -- Insert ข้อมูลจาก vDailyTime เข้า table attendance
 insert ignore into
-    attendance (
-        comCode,
-        empCode,
-        scanCode,
-        dateAt,
-        early,
-        morning,
-        lunch_out,
-        lunch_in,
-        evening,
-        night,
-        count,
-        rawTime
-    )
+    attendance (comCode, empCode, scanCode, dateAt, early, morning, lunch_out, lunch_in, evening, night, count, rawTime)
 select
     e.comCode,
     e.empCode,

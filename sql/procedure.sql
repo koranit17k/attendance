@@ -5,19 +5,7 @@ DELIMITER $$$$
 create procedure payroll.runTimeCard (in p_start DATE)
 begin
 insert ignore into
-    attendance (
-        comCode,
-        empCode,
-        dateAt,
-        early,
-        morning,
-        lunch_out,
-        lunch_in,
-        evening,
-        night,
-        count,
-        rawTime
-    )
+    attendance (comCode, empCode, dateAt, early, morning, lunch_out, lunch_in, evening, night, count, rawTime)
 select
     e.comCode,
     e.empCode,
