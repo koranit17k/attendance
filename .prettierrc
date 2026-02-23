@@ -1,0 +1,21 @@
+{
+    "tabWidth": 4,
+    "semi": false,
+    "bracketSameLine": true,
+    "singleQuote": false,
+    "trailingComma": "all",
+    "printWidth": 100,
+    "plugins": ["prettier-plugin-sql"],
+    "overrides": [
+        {
+            "files": "*.sql",
+            "options": {
+                "language": "mariadb",
+                "keywordCase": "lower",
+                "identifierCase": "preserve",
+                "functionCase": "lower",
+                "expressionWidth": 50
+            }
+        }
+    ]
+}

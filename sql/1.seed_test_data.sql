@@ -1,13 +1,20 @@
 -- Seed Test Data for Attendance Scenarios (Year 2000)
-SET @test_year = '2000';
-SET @emp_code = '99999';
+set
+    @test_year = '2000';
+
+set
+    @emp_code = '99999';
+
 -- Clear existing data
-DELETE FROM timecard
-WHERE scanCode = @emp_code
-    AND YEAR(scanAt) = @test_year
-    AND MONTH(scanAt) = 1;
-INSERT INTO timecard (scanCode, scanAt)
-VALUES -- 1. Normal 1
+delete from timecard
+where
+    scanCode = @emp_code
+    and YEAR(scanAt) = @test_year
+    and MONTH (scanAt) = 1;
+
+insert into
+    timecard (scanCode, scanAt)
+values -- 1. Normal 1
     (@emp_code, '2000-01-01 07:52:00'),
     (@emp_code, '2000-01-01 12:12:00'),
     (@emp_code, '2000-01-01 13:12:00'),

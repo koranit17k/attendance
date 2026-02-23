@@ -1,6 +1,7 @@
 -- insert_attendance.sql
 -- Insert ข้อมูลจาก vDailyTime เข้า table attendance
-INSERT IGNORE INTO attendance (
+insert ignore into
+    attendance (
         comCode,
         empCode,
         dateAt,
@@ -13,7 +14,8 @@ INSERT IGNORE INTO attendance (
         count,
         rawTime
     )
-SELECT e.comCode,
+select
+    e.comCode,
     e.empCode,
     v.dateAt,
     v.early,
@@ -24,7 +26,8 @@ SELECT e.comCode,
     v.night,
     v.count,
     v.rawTime
-FROM vDailyTime v
-    JOIN employee e ON v.scanCode = e.scanCode
--- WHERE v.dateAt >= CURDATE() - INTERVAL 2 month -- กำหนดช่วงวันที่ตามต้องการ
+from
+    vDailyTime v
+    join employee e on v.scanCode = e.scanCode
+    -- WHERE v.dateAt >= CURDATE() - INTERVAL 2 month -- กำหนดช่วงวันที่ตามต้องการ
     -- truncate table attendance; -- ลบข้อมูลทั้งหมดในtable

@@ -1,6 +1,7 @@
+create user 'koranit' @'%' identified by 'oeviivog';
 
-  CREATE USER 'koranit'@'%' IDENTIFIED BY 'oeviivog';
-  CREATE DATABASE payroll;
-  GRANT ALL PRIVILEGES ON payroll.* TO 'koranit'@'%';
-  FLUSH PRIVILEGES;
+create database payroll;
 
+grant all PRIVILEGES on payroll.* to 'koranit' @'%';
+
+flush PRIVILEGES;
