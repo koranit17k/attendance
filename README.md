@@ -10,7 +10,7 @@
 - ความถูกต้องของข้อมูล
 - update ข้อมูลพนักงาน
 - คำนวณเวลางาน รวมถึง สาย และ OT
-- จัดทำ Test Case scenarios เพื่อทดสอบความถูกต้องของข้อมูล
+- จัดทำ Test Case scenarios เพื่อทดสอบความถูกต้องของข้อมูล ด้วย sql หรือผ่าน Vitest โดยการเขียนโปรแกรม
 - สร้าง attendance_clean table เพื่อใช้ในการปรับแก้ข้อมูล
 - จัดทำ procedure เพื่อใช้ในการคำนวณเวลางาน
 - จัดทำ event เพื่อใช้ในการ insert และ update ข้อมูลใน attendance table โดยใช้ procedure แบบ Auto-run (ทำงานด้วยตัวเอง)
@@ -42,7 +42,8 @@
   │   ├── init-db.sh             # Initialize Database
   │   ├── restore.sh             # Restore Database
   │   └── backup.sh              # Backup Database
-  └──.prettierrc                 # Prettier config format
+  ├──.prettierrc                 # Prettier config format
+  └──.gitignore                  # don't commit this file
 ```
 
 ## . Attendance Rules
