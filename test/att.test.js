@@ -194,13 +194,10 @@ const testCases = [
     },
 ]
 
-let connection
-
 describe("Attendance System Verification (Year 3000)", () => {
-    beforeAll(async () => {
-        connection = await mysql.createConnection(DB_CONFIG)
-
-        // 1. Cleanup
+    let connection
+    // ประกาศชื่อ function cleanup
+    const cleanup = async () => {
         const [year, month] = TEST_MONTH.split("-")
         await connection.execute(
             `DELETE FROM timecard WHERE scanCode = ? AND YEAR(scanAt) = ? AND MONTH(scanAt) = ?`,
@@ -210,6 +207,13 @@ describe("Attendance System Verification (Year 3000)", () => {
             `DELETE a FROM attendance a JOIN employee e ON a.comCode = e.comCode AND a.empCode = e.empCode WHERE e.scanCode = ? AND YEAR(a.dateAt) = ? AND MONTH(a.dateAt) = ?`,
             [EMP_CODE, year, month],
         )
+    }
+
+    beforeAll(async () => {
+        connection = await mysql.createConnection(DB_CONFIG)
+
+        // 1. Cleanup
+        await cleanup()
 
         // 2. Batch Seed all scenarios
         const allScans = []
@@ -237,6 +241,7 @@ describe("Attendance System Verification (Year 3000)", () => {
     })
 
     afterAll(async () => {
+        await cleanup()
         if (connection) await connection.end()
     })
 
