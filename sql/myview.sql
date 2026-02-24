@@ -43,7 +43,14 @@ from
                         when v.morning_m is not null
                         and v.lunch_out_m is not null then least(v.halfWorkMin, v.lunch_out_m - greatest(v.morning_m, v.fullWorkMin))
                         when v.lunch_in_m is not null
-                        and coalesce(v.early_m, v.night_m, v.evening_m) is not null then least(v.halfWorkMin, coalesce(v.early_m, v.night_m, v.evening_m) - greatest(v.lunch_in_m, 780))
+                        and coalesce(v.early_m, v.night_m, v.evening_m) is not null then v.halfWorkMin - greatest(0, v.lunch_in_m - 780) - if (
+                            v.night_m is null
+                            and v.early_m is null
+                            and v.evening_m is not null
+                            and v.evening_m < 1020,
+                            1020 - v.evening_m,
+                            0
+                        )
                         else 0
                     end
                 )
