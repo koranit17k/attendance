@@ -37,12 +37,11 @@
   │   ├── check_autorun.sql      # Check autorun
   │   ├── procedure.sql          # Procedure sql before autorun
   │   └── setup_autorun.sql      # Setup autorun
-
-  └──/script                     # Script
-      ├── init-db.sh             # Initialize Database
-      ├── restore.sh             # Restore Database
-      └── backup.sh              # Backup Database
-
+  ├──/script                     # Script
+  │   ├── init-db.sh             # Initialize Database
+  │   ├── restore.sh             # Restore Database
+  │   └── backup.sh              # Backup Database
+  └──.prettierrc                 # Prettier config format
 ```
 
 ## . Attendance Rules

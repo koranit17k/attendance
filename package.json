@@ -1,6 +1,13 @@
 {
-	"devDependencies": {
-		"prettier": "^3.8.1",
-		"prettier-plugin-sql": "^0.19.2"
-	}
+    "scripts": {
+        "test": "npx vitest --run"
+    },
+    "devDependencies": {
+        "prettier": "^3.8.1",
+        "prettier-plugin-sql": "^0.19.2",
+        "vitest": "^4.0.18"
+    },
+    "dependencies": {
+        "mysql2": "^3.18.0"
+    }
 }

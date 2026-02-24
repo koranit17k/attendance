@@ -1,10 +1,10 @@
-drop procedure if exists payroll.runTimeCard;
+DROP PROCEDURE IF EXISTS payroll.runTimeCard;
 
--- insert attendance
-DELIMITER $$$$
-create procedure payroll.runTimeCard (in p_start DATE)
-begin
-insert ignore into
+DELIMITER $$
+$$
+CREATE PROCEDURE payroll.runTimeCard(in p_start DATE)
+BEGIN
+	insert ignore into
     attendance (comCode, empCode, dateAt, early, morning, lunch_out, lunch_in, evening, night, count, rawTime)
 select
     e.comCode,
@@ -24,32 +24,32 @@ from
 where
     v.dateAt >= p_start;
 
-end $$ DELIMITER;
+END
+$$
+DELIMITER ;
 
-drop procedure if exists payroll.runAttendance;
+DROP PROCEDURE IF EXISTS payroll.runAttendance;
 
---update attendance
-DELIMITER $$$$
-create procedure payroll.runAttendance (in p_start DATE)
-begin
-update attendance t
-join vAttendance v on t.comCode = v.comCode
-and t.empCode = v.empCode
-and t.dateAt = v.dateAt
-set
-    t.status = v.status,
-    t.day_case = v.day_case,
-    t.lunch_case = v.lunch_case,
-    t.night_case = v.night_case,
-    t.lunch_minutes = v.lunch_minutes,
-    t.late_morning_minutes = v.late_morning_minutes,
-    t.late_lunch_minutes = v.late_lunch_minutes,
-    t.work_minutes = v.work_minutes,
-    t.ot_total_minutes = v.ot_total_minutes,
-    t.modified_at = now(),
+DELIMITER $$
+$$
+CREATE DEFINER=`koranit`@`%` PROCEDURE `payroll`.`runAttendance`(
+	IN p_start DATE)
+BEGIN
+	UPDATE attendance t
+    JOIN vAttendance v ON t.comCode = v.comCode
+    AND t.empCode = v.empCode
+    AND t.dateAt = v.dateAt
+SET t.lunch_minutes = v.lunchMin,
+    t.late_morning_minutes = v.lateMin1,
+    t.late_lunch_minutes = v.lateMin2,
+    t.work_minutes = v.workMin,
+    t.ot_total_minutes = v.otMin,
+    t.modified_at = NOW(),
     t.modified_by = 'system'
-where
-    t.status_check <> 'APPROVED'
-    and t.dateAt >= p_start;
+WHERE t.status_check <> 'APPROVED'
+    AND t.dateAt >= p_start;
 
-end $$ DELIMITER;
+END
+$$
+DELIMITER ;
+
