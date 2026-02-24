@@ -1,20 +1,17 @@
 -- อัพเดทค่าที่คำนวณได้จาก vAttendance กลับเข้า table attendance
-update attendance as t
-join vAttendance as v on t.comCode = v.comCode
-and t.empCode = v.empCode
-and t.dateAt = v.dateAt
-set
-    t.status = v.status,
-    t.day_case = v.day_case,
-    t.lunch_case = v.lunch_case,
-    t.night_case = v.night_case,
-    t.lunch_minutes = v.lunch_minutes,
-    t.late_morning_minutes = v.late_morning_minutes,
-    t.late_lunch_minutes = v.late_lunch_minutes,
-    t.work_minutes = v.work_minutes,
-    t.ot_total_minutes = v.ot_total_minutes,
-    t.modified_at = now(),
+	UPDATE attendance t
+    JOIN vAttendance v ON t.comCode = v.comCode
+    AND t.empCode = v.empCode
+    AND t.dateAt = v.dateAt
+SET t.lunch_minutes = v.lunchMin,
+    t.late_morning_minutes = v.lateMin1,
+    t.late_lunch_minutes = v.lateMin2,
+    t.work_minutes = v.workMin,
+    t.ot_total_minutes = v.otMin,
+    t.modified_at = NOW(),
     t.modified_by = 'system'
+WHERE t.status_check <> 'APPROVED'
+    AND t.dateAt >= p_start;
     -- WHERE t.dateAt >= '2025-12-01'
     -- >= CURDATE() - INTERVAL 2 MONTH;
     -- กำหนดช่วงวันที่ตามต้องการ

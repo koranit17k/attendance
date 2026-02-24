@@ -48,8 +48,8 @@ SET t.lunch_minutes = v.lunchMin,
     t.modified_by = 'system'
 WHERE t.status_check <> 'APPROVED'
     AND t.dateAt >= p_start;
-
-END
-$$
+    
+END$$
 DELIMITER ;
+
 
