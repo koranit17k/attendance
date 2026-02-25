@@ -5,22 +5,27 @@
 	<parameter name="pYear" class="java.lang.Integer"/>
 	<parameter name="pMonth" class="java.lang.Integer"/>
 	<parameter name="pScanCode" class="java.lang.String"/>
-	<query language="SQL"><![CDATA[SELECT v.*,
-	e.comCode as ecom,
-    c.comCode as ccom,
-  -- e.name as employee_name,
-  c.comName as company_name,
-    s.name as scanName
+	<query language="SQL"><![CDATA[SELECT
+    v.*,
+    e.comCode   AS ecom,
+    c.comCode   AS ccom,
+    c.comName   AS company_name,
+    e.scanCode  AS scanCode,
+    s.name      AS scanName
+    -- ,e.name   AS employee_name
 FROM attendance v
-    join scancode s on v.scanCode = s.scanCode
-    left join employee e on v.scanCode = e.scanCode
-    left  join company c on e.comCode = c.comCode
-    Where v.scanCode = $P{pScanCode} 
-AND YEAR(STR_TO_DATE(v.dateAt,'%Y-%m-%d'))  = $P{pYear}
-AND MONTH(STR_TO_DATE(v.dateAt,'%Y-%m-%d')) = $P{pMonth}
-ORDER BY dateAt,ecom, scancode
-limit 500
-]]></query>
+JOIN employee e
+    ON v.comCode = e.comCode
+   AND v.empCode = e.empCode
+LEFT JOIN scancode s
+    ON s.scanCode = e.scanCode
+LEFT JOIN company c
+    ON c.comCode = e.comCode
+WHERE e.scanCode = $P{pScanCode}
+  AND YEAR(STR_TO_DATE(v.dateAt,'%Y-%m-%d'))  = $P{pYear}
+  AND MONTH(STR_TO_DATE(v.dateAt,'%Y-%m-%d')) = $P{pMonth}
+ORDER BY v.dateAt, ecom, e.scanCode
+LIMIT 500]]></query>
 	<field name="comCode" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="comCode"/>
 		<property name="com.jaspersoft.studio.field.label" value="comCode"/>
@@ -29,12 +34,6 @@ limit 500
 	<field name="empCode" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="empCode"/>
 		<property name="com.jaspersoft.studio.field.label" value="empCode"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="scanCode" class="java.lang.String">
-		<description><![CDATA[รหัสสแกนลายนิ้วมือ]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="scanCode"/>
-		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="dateAt" class="java.lang.String">
@@ -189,6 +188,12 @@ limit 500
 		<property name="com.jaspersoft.studio.field.name" value="comName"/>
 		<property name="com.jaspersoft.studio.field.label" value="company_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
+	</field>
+	<field name="scanCode" class="java.lang.String">
+		<description><![CDATA[รหัสสแกนลายนิ้วมือ]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="scanCode"/>
+		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
 	</field>
 	<field name="scanName" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="name"/>

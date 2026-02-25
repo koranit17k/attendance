@@ -11,19 +11,20 @@
 ]]></defaultValueExpression>
 	</parameter>
 	<query language="SQL"><![CDATA[SELECT v.*,
-	e.comCode as ecom,
-    c.comCode as ccom,
-    e.name as employee_name,
-    c.comName as company_name,
-    s.name as scanName
+       e.comCode AS ecom,
+       c.comCode AS ccom,
+       e.name    AS employee_name,
+       c.comName AS company_name,
+       e.scanCode
 FROM attendance v
-    join scancode s on v.scanCode = s.scanCode
-    left join employee e on v.scanCode = e.scanCode
-    left  join company c on e.comCode = c.comCode
-WHERE  dateAt = $P{startDate}
-ORDER BY ecom, scancode
-limit 500
-]]></query>
+JOIN employee e
+  ON v.comCode = e.comCode
+ AND v.empCode = e.empCode
+JOIN company c
+  ON c.comCode = e.comCode
+WHERE v.dateAt = $P{startDate}
+ORDER BY ccom, e.scanCode
+LIMIT 500]]></query>
 	<field name="comCode" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="comCode"/>
 		<property name="com.jaspersoft.studio.field.label" value="comCode"/>
@@ -32,12 +33,6 @@ limit 500
 	<field name="empCode" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="empCode"/>
 		<property name="com.jaspersoft.studio.field.label" value="empCode"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="scanCode" class="java.lang.String">
-		<description><![CDATA[รหัสสแกนลายนิ้วมือ]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="scanCode"/>
-		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="dateAt" class="java.lang.String">
@@ -198,10 +193,11 @@ limit 500
 		<property name="com.jaspersoft.studio.field.label" value="company_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
 	</field>
-	<field name="scanName" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="name"/>
-		<property name="com.jaspersoft.studio.field.label" value="scanName"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="scancode"/>
+	<field name="scanCode" class="java.lang.String">
+		<description><![CDATA[รหัสสแกนลายนิ้วมือ]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="scanCode"/>
+		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
 	</field>
 	<variable name="totalCount" calculation="Count" class="java.lang.Integer">
 		<expression><![CDATA[$F{scanCode}]]></expression>
@@ -427,7 +423,7 @@ $F{late_lunch_minutes}.intValue()
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			</element>
 			<element kind="textField" uuid="dd9be19a-19bb-4b0b-95d8-423757e618fa" x="64" y="0" width="56" height="16" fontName="Sarabun Thin" blankWhenNull="true" vTextAlign="Bottom">
-				<expression><![CDATA[$F{scanName}]]></expression>
+				<expression><![CDATA[$F{employee_name}]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a733f1dc-c061-4ffd-8481-12d493e35cd1"/>
 				<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>

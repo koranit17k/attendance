@@ -55,22 +55,28 @@
 	<parameter name="pMonth" class="java.lang.String">
 		<defaultValueExpression><![CDATA[11]]></defaultValueExpression>
 	</parameter>
-	<query language="SQL"><![CDATA[SELECT v.*,
-    e.comCode as ecom,
-    c.comCode as ccom,
-    e.name as employee_name,
-    c.comName as company_name,
-    s.name as scanName
+	<query language="SQL"><![CDATA[SELECT
+    v.*,
+    e.comCode AS ecom,
+    c.comCode AS ccom,
+    e.name    AS employee_name,
+    c.comName AS company_name,
+    e.scanCode AS scanCode,
+    s.name    AS scanName
 FROM attendance v
-    left join scancode s on v.scanCode = s.scanCode
-    left join employee e on v.scanCode = e.scanCode
-    left  join company c on e.comCode = c.comCode
-Where STR_TO_DATE(v.dateAt, '%Y-%m-%d') BETWEEN
+LEFT JOIN employee e
+    ON v.comCode = e.comCode
+   AND v.empCode = e.empCode
+LEFT JOIN scancode s
+    ON e.scanCode = s.scanCode
+LEFT JOIN company c
+    ON e.comCode = c.comCode
+WHERE STR_TO_DATE(v.dateAt, '%Y-%m-%d') BETWEEN
       STR_TO_DATE(CONCAT($P!{pYear}, '-', LPAD($P!{pMonth},2,'0'), '-01'), '%Y-%m-%d')
   AND LAST_DAY(
       STR_TO_DATE(CONCAT($P!{pYear}, '-', LPAD($P!{pMonth},2,'0'), '-01'), '%Y-%m-%d')
   )
-ORDER BY ecom, scancode]]></query>
+ORDER BY ecom, e.scanCode]]></query>
 	<field name="comCode" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="comCode"/>
 		<property name="com.jaspersoft.studio.field.label" value="comCode"/>
@@ -79,12 +85,6 @@ ORDER BY ecom, scancode]]></query>
 	<field name="empCode" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="empCode"/>
 		<property name="com.jaspersoft.studio.field.label" value="empCode"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="scanCode" class="java.lang.String">
-		<description><![CDATA[รหัสสแกนลายนิ้วมือ]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="scanCode"/>
-		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="dateAt" class="java.lang.String">
@@ -246,6 +246,12 @@ ORDER BY ecom, scancode]]></query>
 		<property name="com.jaspersoft.studio.field.name" value="comName"/>
 		<property name="com.jaspersoft.studio.field.label" value="company_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
+	</field>
+	<field name="scanCode" class="java.lang.String">
+		<description><![CDATA[รหัสสแกนลายนิ้วมือ]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="scanCode"/>
+		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
 	</field>
 	<field name="scanName" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="name"/>

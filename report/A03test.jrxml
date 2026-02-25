@@ -47,16 +47,20 @@
   c.comCode AS ccom,
   e.name AS employee_name,
   c.comName AS company_name,
+  e.scanCode AS scanCode,
   s.name AS scanName
 FROM dim_date dd
 LEFT JOIN attendance v
   ON STR_TO_DATE(v.dateAt, '%Y-%m-%d') = dd.dateAt
-LEFT JOIN scancode s ON v.scanCode = s.scanCode
-LEFT JOIN employee e ON v.scanCode = e.scanCode
-LEFT JOIN company c ON e.comCode = c.comCode
+LEFT JOIN employee e
+  ON v.comCode = e.comCode
+ AND v.empCode = e.empCode
+LEFT JOIN scancode s
+  ON s.scanCode = e.scanCode
+LEFT JOIN company c
+  ON e.comCode = c.comCode
 WHERE YEAR(dd.dateAt) = $P{pYear}
-  AND MONTH(dd.dateAt) = $P{pMonth}
-]]></query>
+  AND MONTH(dd.dateAt) = $P{pMonth};]]></query>
 	<field name="ddateAt" class="java.sql.Date">
 		<property name="com.jaspersoft.studio.field.name" value="dateAt"/>
 		<property name="com.jaspersoft.studio.field.label" value="ddateAt"/>
@@ -70,12 +74,6 @@ WHERE YEAR(dd.dateAt) = $P{pYear}
 	<field name="empCode" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="empCode"/>
 		<property name="com.jaspersoft.studio.field.label" value="empCode"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
-	</field>
-	<field name="scanCode" class="java.lang.String">
-		<description><![CDATA[รหัสสแกนลายนิ้วมือ]]></description>
-		<property name="com.jaspersoft.studio.field.name" value="scanCode"/>
-		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
 	</field>
 	<field name="dateAt" class="java.lang.String">
@@ -235,6 +233,12 @@ WHERE YEAR(dd.dateAt) = $P{pYear}
 		<property name="com.jaspersoft.studio.field.name" value="comName"/>
 		<property name="com.jaspersoft.studio.field.label" value="company_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="company"/>
+	</field>
+	<field name="scanCode" class="java.lang.String">
+		<description><![CDATA[รหัสสแกนลายนิ้วมือ]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="scanCode"/>
+		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
 	</field>
 	<field name="scanName" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="name"/>
