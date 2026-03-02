@@ -47,16 +47,13 @@
   c.comCode AS ccom,
   e.name AS employee_name,
   c.comName AS company_name,
-  e.scanCode AS scanCode,
-  s.name AS scanName
+  e.scanCode AS scanCode
 FROM dim_date dd
 LEFT JOIN attendance v
   ON STR_TO_DATE(v.dateAt, '%Y-%m-%d') = dd.dateAt
 LEFT JOIN employee e
   ON v.comCode = e.comCode
  AND v.empCode = e.empCode
-LEFT JOIN scancode s
-  ON s.scanCode = e.scanCode
 LEFT JOIN company c
   ON e.comCode = c.comCode
 WHERE YEAR(dd.dateAt) = $P{pYear}
@@ -240,11 +237,6 @@ WHERE YEAR(dd.dateAt) = $P{pYear}
 		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
 	</field>
-	<field name="scanName" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="name"/>
-		<property name="com.jaspersoft.studio.field.label" value="scanName"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="scancode"/>
-	</field>
 	<background splitType="Stretch"/>
 	<title height="40" splitType="Stretch">
 		<element kind="textField" uuid="f47156bc-0f48-4741-81a4-55bdb4b18ebe" x="595" y="0" width="100" height="30" fontName="Sarabun Thin">
@@ -303,13 +295,13 @@ WHERE YEAR(dd.dateAt) = $P{pYear}
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</totalHeader>
 			</rowGroup>
-			<rowGroup name="scanName" totalPosition="End" width="30">
+			<rowGroup name="employee_name" totalPosition="End" width="30">
 				<bucket class="java.lang.String">
-					<expression><![CDATA[$F{scanName}]]></expression>
+					<expression><![CDATA[$F{employee_name}]]></expression>
 				</bucket>
 				<header mode="Opaque" style="Crosstab_CH">
 					<element kind="textField" uuid="755a7f13-1c7f-4bad-875f-06a1737b0ac0" x="0" y="0" width="30" height="8" fontName="Sarabun Thin" fontSize="6.0">
-						<expression><![CDATA[$V{scanName}]]></expression>
+						<expression><![CDATA[$V{employee_name}]]></expression>
 						<box leftPadding="2"/>
 					</element>
 				</header>
@@ -368,12 +360,12 @@ WHERE YEAR(dd.dateAt) = $P{pYear}
 			<cell width="5" height="15" rowTotalGroup="company_name" columnTotalGroup="ddateAt">
 				<contents mode="Opaque" style="Crosstab_CT"/>
 			</cell>
-			<cell width="22" height="5" rowTotalGroup="scanName">
+			<cell width="22" height="5" rowTotalGroup="employee_name">
 				<contents mode="Opaque" style="Crosstab_CT">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</contents>
 			</cell>
-			<cell width="5" height="5" rowTotalGroup="scanName" columnTotalGroup="ddateAt">
+			<cell width="5" height="5" rowTotalGroup="employee_name" columnTotalGroup="ddateAt">
 				<contents mode="Opaque" style="Crosstab_CT"/>
 			</cell>
 		</element>

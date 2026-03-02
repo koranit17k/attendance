@@ -11,14 +11,12 @@
     c.comCode   AS ccom,
     c.comName   AS company_name,
     e.scanCode  AS scanCode,
-    s.name      AS scanName
-    -- ,e.name   AS employee_name
+    e.name   AS employee_name
 FROM attendance v
 JOIN employee e
     ON v.comCode = e.comCode
    AND v.empCode = e.empCode
-LEFT JOIN scancode s
-    ON s.scanCode = e.scanCode
+
 LEFT JOIN company c
     ON c.comCode = e.comCode
 WHERE e.scanCode = $P{pScanCode}
@@ -195,10 +193,10 @@ LIMIT 500]]></query>
 		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
 	</field>
-	<field name="scanName" class="java.lang.String">
+	<field name="employee_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="name"/>
-		<property name="com.jaspersoft.studio.field.label" value="scanName"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="scancode"/>
+		<property name="com.jaspersoft.studio.field.label" value="employee_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
 	</field>
 	<variable name="late_morning_minutes" calculation="Sum" class="java.lang.Integer">
 		<expression><![CDATA[$F{late_morning_minutes}]]></expression>
@@ -245,7 +243,7 @@ LIMIT 500]]></query>
 				<expression><![CDATA[$F{scanCode}]]></expression>
 			</element>
 			<element kind="textField" uuid="7db603bf-9483-43b5-b60d-0d92ea751782" x="70" y="19" width="190" height="20" fontName="Sarabun Thin">
-				<expression><![CDATA[$F{scanName}]]></expression>
+				<expression><![CDATA[$F{employee_name}]]></expression>
 			</element>
 			<element kind="textField" uuid="6ccb5cf8-cc00-4f16-9f49-8cba550f4a3e" x="70" y="39" width="190" height="20" fontName="Sarabun Thin" blankWhenNull="true">
 				<expression><![CDATA[$F{company_name}]]></expression>
@@ -345,9 +343,9 @@ new java.text.SimpleDateFormat("dd/MM/yyyy").format(
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
 			</element>
 			<element kind="textField" uuid="adbcbe68-225c-4e05-82cc-dbd61b5a9369" x="60" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
-				<expression><![CDATA["1".equals($F{status}) ? ""
-: "2".equals($F{status}) ? "/"
-: "3".equals($F{status}) ? "X"
+				<expression><![CDATA["FullDay".equals($F{status}) ? ""
+: "HalfDay".equals($F{status}) ? "/"
+: "Absent".equals($F{status}) ? "X"
 : "-"
 ]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e8faded7-3feb-49c2-97f5-675beba13dd1"/>

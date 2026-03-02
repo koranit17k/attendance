@@ -61,14 +61,11 @@
     c.comCode AS ccom,
     e.name    AS employee_name,
     c.comName AS company_name,
-    e.scanCode AS scanCode,
-    s.name    AS scanName
+    e.scanCode AS scanCode
 FROM attendance v
 LEFT JOIN employee e
     ON v.comCode = e.comCode
    AND v.empCode = e.empCode
-LEFT JOIN scancode s
-    ON e.scanCode = s.scanCode
 LEFT JOIN company c
     ON e.comCode = c.comCode
 WHERE STR_TO_DATE(v.dateAt, '%Y-%m-%d') BETWEEN
@@ -253,11 +250,6 @@ ORDER BY ecom, e.scanCode]]></query>
 		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
 	</field>
-	<field name="scanName" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="name"/>
-		<property name="com.jaspersoft.studio.field.label" value="scanName"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="scancode"/>
-	</field>
 	<title height="57" splitType="Stretch">
 		<element kind="textField" uuid="77f91706-70bb-46b1-8780-b1005ee9bd10" x="290" y="0" width="178" height="34" fontName="Sarabun Thin" fontSize="12.0" hTextAlign="Center" vTextAlign="Middle">
 			<expression><![CDATA[$P{JASPER_REPORT}.getName()]]></expression>
@@ -312,13 +304,13 @@ ORDER BY ecom, e.scanCode]]></query>
 				</header>
 				<totalHeader mode="Opaque" style="Crosstab 1_CG"/>
 			</rowGroup>
-			<rowGroup name="scanName" totalPosition="End" width="30">
+			<rowGroup name="employee_name" totalPosition="End" width="30">
 				<bucket class="java.lang.String">
-					<expression><![CDATA[$F{scanName}]]></expression>
+					<expression><![CDATA[$F{employee_name}]]></expression>
 				</bucket>
 				<header mode="Opaque" style="Crosstab 1_CH">
 					<element kind="textField" uuid="7229fe09-6fc2-46b9-8e64-990b2648734e" x="0" y="0" width="30" height="10" fontName="Sarabun Thin" fontSize="6.0">
-						<expression><![CDATA[$V{scanName}]]></expression>
+						<expression><![CDATA[$V{employee_name}]]></expression>
 					</element>
 				</header>
 				<totalHeader mode="Opaque" style="Crosstab 1_CT"/>
@@ -376,12 +368,12 @@ ORDER BY ecom, e.scanCode]]></query>
 			<cell width="5" height="15" rowTotalGroup="company_name" columnTotalGroup="dateAt">
 				<contents mode="Opaque" style="Crosstab 1_CT"/>
 			</cell>
-			<cell width="24" height="5" rowTotalGroup="scanName">
+			<cell width="24" height="5" rowTotalGroup="employee_name">
 				<contents mode="Opaque" style="Crosstab 1_CT">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</contents>
 			</cell>
-			<cell width="5" height="5" rowTotalGroup="scanName" columnTotalGroup="dateAt">
+			<cell width="5" height="5" rowTotalGroup="employee_name" columnTotalGroup="dateAt">
 				<contents mode="Opaque" style="Crosstab 1_CT"/>
 			</cell>
 		</element>

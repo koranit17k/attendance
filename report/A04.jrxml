@@ -1,6 +1,225 @@
 <!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
 <jasperReport name="รายงานวิเคราะห์พนักงาน" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8d4f381e-dcc0-4411-a9b1-6b732bc634e8" floatColumnFooter="true">
-	<query language="sql"><![CDATA[]]></query>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="payroll"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="pYear" class="java.lang.Integer"/>
+	<parameter name="pMonth" class="java.lang.Integer"/>
+	<query language="sql"><![CDATA[SELECT
+	v.*,
+	e.scanCode ,
+	v.dateAt,
+	COUNT(*) AS total_cnt,
+	--     count(*),
+	--     e.comCode   AS ecom,
+	--     c.comCode   AS ccom,
+	--     c.comName   AS company_name,
+	    e.scanCode  AS scanCode,
+	e.name   AS employee_name,
+	SUM(v.status = 'FullDay') AS full_day_cnt,
+	SUM(v.status = 'HalfDay') AS half_day_cnt,
+	SUM(v.status = 'Absent') AS absent_cnt,
+	SUM(v.late_morning_minutes + v.late_lunch_minutes ) as total_late
+	FROM
+	attendance v
+JOIN employee e
+    ON
+	v.comCode = e.comCode
+	AND v.empCode = e.empCode
+	-- LEFT JOIN company c
+	--     ON c.comCode = e.comCode
+WHERE
+	    YEAR(STR_TO_DATE(v.dateAt,'%Y-%m-%d'))  = $P{pYear}
+	  AND MONTH(STR_TO_DATE(v.dateAt,'%Y-%m-%d')) = $P{pMonth} 
+-- 	ORDER BY v.dateAt, e.scanCode
+group by e.scanCode  ]]></query>
+	<field name="comCode" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="comCode"/>
+		<property name="com.jaspersoft.studio.field.label" value="comCode"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="empCode" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="empCode"/>
+		<property name="com.jaspersoft.studio.field.label" value="empCode"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="dateAt" class="java.lang.String">
+		<description><![CDATA[วันเดือนปีทำงาน]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="dateAt"/>
+		<property name="com.jaspersoft.studio.field.label" value="dateAt"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="status" class="java.lang.String">
+		<description><![CDATA[สถานะ]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="status"/>
+		<property name="com.jaspersoft.studio.field.label" value="status"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="day_case" class="java.lang.String">
+		<description><![CDATA[ดูวัน]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="day_case"/>
+		<property name="com.jaspersoft.studio.field.label" value="day_case"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="lunch_case" class="java.lang.String">
+		<description><![CDATA[ดูพักเที่ยง]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="lunch_case"/>
+		<property name="com.jaspersoft.studio.field.label" value="lunch_case"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="night_case" class="java.lang.String">
+		<description><![CDATA[ดูค่ำ]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="night_case"/>
+		<property name="com.jaspersoft.studio.field.label" value="night_case"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="early" class="java.lang.String">
+		<description><![CDATA[เวลาออก ข้ามวัน 00:00 - 06:00 (last)]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="early"/>
+		<property name="com.jaspersoft.studio.field.label" value="early"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="morning" class="java.lang.String">
+		<description><![CDATA[เวลาเข้า เช้า 06:00 - 10:00 (last)]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="morning"/>
+		<property name="com.jaspersoft.studio.field.label" value="morning"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="lunch_out" class="java.lang.String">
+		<description><![CDATA[เวลาพักเที่ยง 11:00 - 13:30 (first)]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="lunch_out"/>
+		<property name="com.jaspersoft.studio.field.label" value="lunch_out"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="lunch_in" class="java.lang.String">
+		<description><![CDATA[เวลากลับเที่ยง 11:30 - 14:00 (last)]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="lunch_in"/>
+		<property name="com.jaspersoft.studio.field.label" value="lunch_in"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="evening" class="java.lang.String">
+		<description><![CDATA[เวลาออก เย็น 16:00 - 18:00 (last)]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="evening"/>
+		<property name="com.jaspersoft.studio.field.label" value="evening"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="night" class="java.lang.String">
+		<description><![CDATA[เวลาออก ค่ำ 19:00 - 24:00 (last)]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="night"/>
+		<property name="com.jaspersoft.studio.field.label" value="night"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="lunch_minutes" class="java.lang.Integer">
+		<description><![CDATA[จำนวนนาทีพักกลางวัน]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="lunch_minutes"/>
+		<property name="com.jaspersoft.studio.field.label" value="lunch_minutes"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="late_morning_minutes" class="java.lang.Integer">
+		<description><![CDATA[จำนวนนาทีมาสาย เช้า]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="late_morning_minutes"/>
+		<property name="com.jaspersoft.studio.field.label" value="late_morning_minutes"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="late_lunch_minutes" class="java.lang.Integer">
+		<description><![CDATA[จำนวนนาทีมาสาย บ่าย/เที่ยง/ออกก่อนเวลางาน]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="late_lunch_minutes"/>
+		<property name="com.jaspersoft.studio.field.label" value="late_lunch_minutes"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="work_minutes" class="java.lang.Integer">
+		<description><![CDATA[จำนวนนาทีทำงาน]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="work_minutes"/>
+		<property name="com.jaspersoft.studio.field.label" value="work_minutes"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="ot_total_minutes" class="java.lang.Integer">
+		<description><![CDATA[จำนวนนาทีล่วงเวลา]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="ot_total_minutes"/>
+		<property name="com.jaspersoft.studio.field.label" value="ot_total_minutes"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="count" class="java.lang.Integer">
+		<description><![CDATA[จำนวนครั้งที่สแกน]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="count"/>
+		<property name="com.jaspersoft.studio.field.label" value="count"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="rawTime" class="java.lang.String">
+		<description><![CDATA[เวลาที่สแกน]]></description>
+		<property name="com.jaspersoft.studio.field.name" value="rawTime"/>
+		<property name="com.jaspersoft.studio.field.label" value="rawTime"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="reason" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="reason"/>
+		<property name="com.jaspersoft.studio.field.label" value="reason"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="status_check" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="status_check"/>
+		<property name="com.jaspersoft.studio.field.label" value="status_check"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="modified_by" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="modified_by"/>
+		<property name="com.jaspersoft.studio.field.label" value="modified_by"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="modified_at" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="modified_at"/>
+		<property name="com.jaspersoft.studio.field.label" value="modified_at"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="approved_by" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="approved_by"/>
+		<property name="com.jaspersoft.studio.field.label" value="approved_by"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="approved_at" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="approved_at"/>
+		<property name="com.jaspersoft.studio.field.label" value="approved_at"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="scanCode" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="scanCode"/>
+		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+	</field>
+	<field name="COLUMN_28" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="dateAt"/>
+		<property name="com.jaspersoft.studio.field.label" value="dateAt"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="attendance"/>
+	</field>
+	<field name="total_cnt" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="total_cnt"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_cnt"/>
+	</field>
+	<field name="COLUMN_30" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="scanCode"/>
+		<property name="com.jaspersoft.studio.field.label" value="scanCode"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+	</field>
+	<field name="employee_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="name"/>
+		<property name="com.jaspersoft.studio.field.label" value="employee_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="employee"/>
+	</field>
+	<field name="full_day_cnt" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="full_day_cnt"/>
+		<property name="com.jaspersoft.studio.field.label" value="full_day_cnt"/>
+	</field>
+	<field name="half_day_cnt" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="half_day_cnt"/>
+		<property name="com.jaspersoft.studio.field.label" value="half_day_cnt"/>
+	</field>
+	<field name="absent_cnt" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="absent_cnt"/>
+		<property name="com.jaspersoft.studio.field.label" value="absent_cnt"/>
+	</field>
+	<field name="total_late" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_late"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_late"/>
+	</field>
 	<background splitType="Stretch"/>
 	<title height="55" splitType="Stretch">
 		<element kind="textField" uuid="ea679eea-4712-4119-8e5e-00e0c78b0333" x="270" y="40" width="72" height="15" fontName="Sarabun Thin" hTextAlign="Center">
@@ -61,10 +280,10 @@
 		<element kind="staticText" uuid="0647e7a5-9fb4-482e-b680-24cf47fafba7" x="220" y="0" width="30" height="14" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[สาย]]></text>
 		</element>
-		<element kind="staticText" uuid="5ed21a2d-36d8-456e-ba95-c7890fff15cf" x="345" y="0" width="70" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+		<element kind="staticText" uuid="5ed21a2d-36d8-456e-ba95-c7890fff15cf" x="360" y="0" width="54" height="14" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[เข้างานเฉลี่ย]]></text>
 		</element>
-		<element kind="staticText" uuid="406c472b-2053-4bc3-9887-bb9d1b93e435" x="415" y="0" width="40" height="14" fontName="Sarabun Thin" hTextAlign="Right">
+		<element kind="staticText" uuid="406c472b-2053-4bc3-9887-bb9d1b93e435" x="414" y="0" width="41" height="14" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[สายเฉลี่ย]]></text>
 		</element>
 		<element kind="staticText" uuid="666b7c2d-ad5f-4bfd-8945-4fbda5343aab" x="455" y="0" width="50" height="14" fontName="Sarabun Thin" hTextAlign="Right">
@@ -75,7 +294,48 @@
 		</element>
 	</columnHeader>
 	<detail>
-		<band height="27" splitType="Stretch"/>
+		<band height="27" splitType="Stretch">
+			<element kind="textField" uuid="b93e7a28-b901-495b-b96e-ec5c97bd9fec" x="0" y="0" width="60" height="16" fontName="Sarabun Thin">
+				<expression><![CDATA[$F{scanCode}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
+			</element>
+			<element kind="textField" uuid="6d0f03bc-1c0d-47fb-9413-8c88f6fe3022" x="60" y="0" width="70" height="16" fontName="Sarabun Thin">
+				<expression><![CDATA[$F{employee_name}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
+			</element>
+			<element kind="textField" uuid="bdc29fcb-dd8e-4388-9892-8c67fc90cc33" x="130" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+				<expression><![CDATA[$F{full_day_cnt}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
+			</element>
+			<element kind="textField" uuid="8350291a-11c9-4fb3-a8ef-64d68e0c94fc" x="220" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+				<expression><![CDATA[$F{total_late}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
+			</element>
+			<element kind="textField" uuid="2eaf5fdc-7ca8-461e-ab25-720718d4deaf" x="160" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+				<expression><![CDATA[$F{half_day_cnt}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
+			</element>
+			<element kind="textField" uuid="8b27beef-3760-46a6-a19c-d61c6155d901" x="190" y="0" width="30" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+				<expression><![CDATA[$F{absent_cnt}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
+			</element>
+			<element kind="textField" uuid="4cc9fc9b-d610-4dd4-87d3-7eb62d289756" x="360" y="0" width="54" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+				<expression><![CDATA[$F{total_late}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
+			</element>
+			<element kind="textField" uuid="555e0355-665c-4fdf-8e61-73d0258614b3" x="414" y="0" width="41" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+				<expression><![CDATA[$F{total_late}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
+			</element>
+			<element kind="textField" uuid="b007ccb8-8623-43ed-b0cf-ef5f558babb2" x="455" y="0" width="50" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+				<expression><![CDATA[$F{total_late}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
+			</element>
+			<element kind="textField" uuid="602c8587-ca2c-4457-8865-5451d9db239a" x="505" y="0" width="50" height="16" fontName="Sarabun Thin" hTextAlign="Right">
+				<expression><![CDATA[$F{total_late}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e5668500-d754-49f9-b168-524b5cea5ed4"/>
+			</element>
+		</band>
 	</detail>
 	<columnFooter height="23" splitType="Stretch"/>
 	<pageFooter height="33" splitType="Stretch"/>
