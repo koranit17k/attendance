@@ -206,16 +206,16 @@ LIMIT 500]]></query>
 		<expression><![CDATA[$F{scanCode}]]></expression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
 	</variable>
-	<variable name="vGreenCount" calculation="Sum" class="java.lang.Integer">
-		<expression><![CDATA["1".equals($F{status}) ? 1 : 0
+	<variable name="vFullDayCount" calculation="Sum" class="java.lang.Integer">
+		<expression><![CDATA["FullDay".equals($F{status}) ? 1 : 0
 ]]></expression>
 	</variable>
-	<variable name="vYellowCount" calculation="Sum" class="java.lang.Integer">
-		<expression><![CDATA["2".equals($F{status}) ? 1 : 0
+	<variable name="vHalfDayCount" calculation="Sum" class="java.lang.Integer">
+		<expression><![CDATA["HalfDay".equals($F{status}) ? 1 : 0
 ]]></expression>
 	</variable>
-	<variable name="vRedCount" calculation="Sum" class="java.lang.Integer">
-		<expression><![CDATA["3".equals($F{status}) ? 1 : 0
+	<variable name="vAbsentCount" calculation="Sum" class="java.lang.Integer">
+		<expression><![CDATA["Absent".equals($F{status}) ? 1 : 0
 ]]></expression>
 	</variable>
 	<group name="companyName">
@@ -485,20 +485,20 @@ $F{late_lunch_minutes}.intValue()
 			<text><![CDATA[คน]]></text>
 		</element>
 		<element kind="textField" uuid="b4c1546b-e49d-4076-adc0-0798393ed792" x="80" y="10" width="20" height="20" fontName="Sarabun Thin" hTextAlign="Right">
-			<expression><![CDATA[$V{vGreenCount}]]></expression>
+			<expression><![CDATA[$V{vFullDayCount}]]></expression>
 		</element>
 		<element kind="textField" uuid="08d309f4-00cf-488a-a4ff-ef012f7fa603" x="80" y="30" width="20" height="20" fontName="Sarabun Thin" hTextAlign="Right">
-			<expression><![CDATA[$V{vYellowCount}]]></expression>
+			<expression><![CDATA[$V{vHalfDayCount}]]></expression>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
 		<element kind="textField" uuid="7f3a9060-5beb-4b8b-8787-c554fe6f6bd9" x="80" y="50" width="20" height="20" fontName="Sarabun Thin" hTextAlign="Right">
-			<expression><![CDATA[$V{vRedCount}]]></expression>
+			<expression><![CDATA[$V{vAbsentCount}]]></expression>
 			<property name="com.jaspersoft.studio.unit.width" value="px"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
 		<element kind="staticText" uuid="a9878aa5-ba2d-430a-95af-d10b98e34d06" x="0" y="10" width="80" height="20" fontName="Sarabun Thin">
-			<text><![CDATA[พนักงานเคสเขียว]]></text>
+			<text><![CDATA[พนักงานเต็มวัน]]></text>
 		</element>
 		<element kind="staticText" uuid="6610525f-eaad-4a88-951f-890440437f12" x="101" y="10" width="18" height="20" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[คน]]></text>
@@ -507,13 +507,13 @@ $F{late_lunch_minutes}.intValue()
 			<text><![CDATA[คน]]></text>
 		</element>
 		<element kind="staticText" uuid="c70bee9a-74ec-456a-9351-3f31000058c8" x="0" y="30" width="80" height="20" fontName="Sarabun Thin">
-			<text><![CDATA[พนักงานเคสเหลือง]]></text>
+			<text><![CDATA[พนักงานครึ่งวัน]]></text>
 		</element>
 		<element kind="staticText" uuid="8274ef37-f4c1-4469-abe4-4723b39772f0" x="101" y="50" width="18" height="20" fontName="Sarabun Thin" hTextAlign="Right">
 			<text><![CDATA[คน]]></text>
 		</element>
 		<element kind="staticText" uuid="c5d80dea-5c19-4513-96a4-d126aceca8b3" x="0" y="50" width="80" height="20" fontName="Sarabun Thin">
-			<text><![CDATA[พนักงานเคสแดง]]></text>
+			<text><![CDATA[พนักงานขาด]]></text>
 		</element>
 	</summary>
 </jasperReport>
