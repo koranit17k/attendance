@@ -24,6 +24,21 @@ from
 where
     v.dateAt >= p_start;
 
+
+UPDATE employee e
+SET e.timeCode = NULL
+WHERE e.timeCode IS NOT NULL
+  AND e.endDate IS NULL
+  AND NOT EXISTS (
+        SELECT 1
+        FROM attendance a
+        WHERE a.comCode = e.comCode
+          AND a.empCode = e.empCode
+          AND a.dateAt >= '2025-01-01'
+          AND a.dateAt < CURDATE() + INTERVAL 1 DAY
+  );
+
+
 INSERT IGNORE INTO attendance (
         comCode, 
         empCode, 
@@ -45,6 +60,7 @@ join employee e
 where DAYOFWEEK(dateAt) <> 1 and e.timeCode is not null and e.endDate is null;
 END$$
 DELIMITER ;
+
 
 
 DELIMITER $$
