@@ -1,13 +1,51 @@
 <!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
-<jasperReport name="A05" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cce411a4-41e9-4188-a8b2-b6ac0c0ba3e8">
+<jasperReport name="รายงานวิเคราะห์ทั้งบริษัท" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cce411a4-41e9-4188-a8b2-b6ac0c0ba3e8">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<query language="sql"><![CDATA[]]></query>
 	<background splitType="Stretch"/>
-	<title height="79" splitType="Stretch"/>
-	<pageHeader height="35" splitType="Stretch"/>
+	<title height="55" splitType="Stretch">
+		<element kind="textField" uuid="ceea57c3-b6e9-46f3-b122-d3f26d876df0" x="191" y="0" width="178" height="34" fontName="Sarabun Thin" fontSize="12.0" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[$P{JASPER_REPORT}.getName()]]></expression>
+		</element>
+		<element kind="staticText" uuid="115a978b-3dca-4c67-b706-c87dca9ef97f" x="0" y="0" width="18" height="20" fontName="Sarabun Light" fontSize="7.0">
+			<text><![CDATA[A04]]></text>
+		</element>
+		<element kind="textField" uuid="a0e388f7-0668-4280-a942-a7fb456592ac" x="512" y="0" width="25" height="20" fontName="Sarabun Thin" fontSize="8.0" hTextAlign="Right">
+			<expression><![CDATA[$V{PAGE_NUMBER}+" /"]]></expression>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="textField" uuid="80892106-f676-4088-b497-ff78999da2f0" x="539" y="0" width="15" height="20" fontName="Sarabun Thin" fontSize="8.0" evaluationTime="Report" hTextAlign="Left">
+			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="staticText" uuid="27ce8ae4-6b6b-41f9-bb6b-ca451af4cfe2" x="222" y="40" width="47" height="15" fontName="Sarabun Thin">
+			<text><![CDATA[ประจำเดือน]]></text>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="textField" uuid="f3d002d6-a24d-4987-b646-844641dd0d45" x="270" y="40" width="72" height="15" fontName="Sarabun Thin" hTextAlign="Center">
+			<expression><![CDATA[new java.text.DateFormatSymbols(new java.util.Locale("th","TH"))
+    .getMonths()[$P{pMonth} - 1]
++ " " + $P{pYear}
+]]></expression>
+		</element>
+	</title>
+	<pageHeader height="15" splitType="Stretch">
+		<element kind="textField" uuid="26363f80-e69e-4f89-b644-344e9489de7d" x="512" y="0" width="25" height="15" fontName="Sarabun Thin" fontSize="8.0" hTextAlign="Right">
+			<expression><![CDATA[$V{PAGE_NUMBER} > 1 ? $V{PAGE_NUMBER} + " /" : ""
+]]></expression>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="textField" uuid="2229f264-e0b2-4a69-9b7b-da5cb9993649" x="539" y="0" width="15" height="15" fontName="Sarabun Thin" fontSize="8.0" evaluationTime="Report" hTextAlign="Left">
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1
+]]></printWhenExpression>
+			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+	</pageHeader>
 	<columnHeader height="61" splitType="Stretch"/>
 	<detail>
-		<band height="125" splitType="Stretch"/>
+		<band height="304" splitType="Stretch"/>
 	</detail>
 	<columnFooter height="45" splitType="Stretch"/>
 	<pageFooter height="54" splitType="Stretch"/>

@@ -2,7 +2,7 @@ DROP PROCEDURE IF EXISTS payroll.runTimeCard;
 
 DELIMITER $$
 $$
-CREATE PROCEDURE payroll.runTimeCard(in p_start DATE)
+CREATE DEFINER=`koranit`@`%` PROCEDURE `payroll`.`runTimeCard`(in p_start DATE)
 BEGIN
 	insert ignore into
     attendance (comCode, empCode, dateAt, early, morning, lunch_out, lunch_in, evening, night, count, rawTime)
@@ -24,11 +24,28 @@ from
 where
     v.dateAt >= p_start;
 
-END
-$$
+INSERT IGNORE INTO attendance (
+        comCode, 
+        empCode, 
+        dateAt, 
+        status,
+        modified_by ,
+        modified_at
+    )
+WITH RECURSIVE dates AS (
+    SELECT '2025-01-01' AS dateAt
+    UNION ALL
+    SELECT dateAt + INTERVAL 1 DAY
+    FROM dates
+    WHERE dateAt < CURDATE() 
+)
+SELECT e.comCode,e.empCode ,dateAt,"Absent" ,"system",now()
+FROM dates
+join employee e  
+where DAYOFWEEK(dateAt) <> 1 and e.timeCode is not null and e.endDate is null;
+END$$
 DELIMITER ;
 
-DROP PROCEDURE IF EXISTS payroll.runAttendance;
 
 DELIMITER $$
 $$
