@@ -479,7 +479,7 @@ $F{late_lunch_minutes}.intValue()
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</band>
 	</detail>
-	<summary height="121" splitType="Stretch">
+	<summary height="36" splitType="Stretch">
 		<element kind="staticText" uuid="46e8df4f-9d63-4979-ba82-b9a5e2685f3b" x="424" y="11" width="18" height="15" fontName="Sarabun Thin" bold="true" hTextAlign="Right">
 			<text><![CDATA[คน]]></text>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>

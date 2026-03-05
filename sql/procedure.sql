@@ -25,20 +25,6 @@ where
     v.dateAt >= p_start;
 
 
-UPDATE employee e
-SET e.timeCode = NULL
-WHERE e.timeCode IS NOT NULL
-  AND e.endDate IS NULL
-  AND NOT EXISTS (
-        SELECT 1
-        FROM attendance a
-        WHERE a.comCode = e.comCode
-          AND a.empCode = e.empCode
-          AND a.dateAt >= '2025-01-01'
-          AND a.dateAt < CURDATE() + INTERVAL 1 DAY
-  );
-
-
 INSERT IGNORE INTO attendance (
         comCode, 
         empCode, 
@@ -48,7 +34,7 @@ INSERT IGNORE INTO attendance (
         modified_at
     )
 WITH RECURSIVE dates AS (
-    SELECT '2025-01-01' AS dateAt
+    SELECT p_start AS dateAt
     UNION ALL
     SELECT dateAt + INTERVAL 1 DAY
     FROM dates
@@ -56,10 +42,13 @@ WITH RECURSIVE dates AS (
 )
 SELECT e.comCode,e.empCode ,dateAt,"Absent" ,"system",now()
 FROM dates
-join employee e  
-where DAYOFWEEK(dateAt) <> 1 and e.timeCode is not null and e.endDate is null;
+join employee e 
+left join holiday h on e.comCode = h.comCode and dates.dateAt = h.`day` 
+where DAYOFWEEK(dateAt) <> 1 and e.timeCode is not null and e.endDate is null and day is null;
+
 END$$
 DELIMITER ;
+
 
 
 
