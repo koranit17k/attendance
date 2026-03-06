@@ -8,4 +8,11 @@
 	</buildSpec>
 	<natures>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>A00.jrxml</name>
+			<type>1</type>
+			<location>/home/koranit/kxreport/report/A00.jrxml</location>
+		</link>
+	</linkedResources>
 </projectDescription>

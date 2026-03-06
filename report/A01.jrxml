@@ -6,10 +6,6 @@
 	<parameter name="startDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2025-12-02"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="reportDate" class="java.util.Date">
-		<defaultValueExpression><![CDATA[new java.text.SimpleDateFormat("yyyy-MM-dd").parse("2025-12-01")
-]]></defaultValueExpression>
-	</parameter>
 	<query language="SQL"><![CDATA[SELECT v.*,
        e.comCode AS ecom,
        c.comCode AS ccom,

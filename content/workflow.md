@@ -14,7 +14,8 @@
 - สร้าง attendance_clean table เพื่อใช้ในการปรับแก้ข้อมูล
 - จัดทำ procedure เพื่อใช้ในการคำนวณเวลางาน
 - จัดทำ event เพื่อใช้ในการ insert และ update ข้อมูลใน attendance table โดยใช้ procedure แบบ Auto-run (ทำงานด้วยตัวเอง) เพื่อรัน 1 วัน ต่อครั้ง และรันทุกวัน
-- จัดทำ Report
+- จัดทำ Report 
+- จัดทำระบบสำหรับแสดง report ผ่าน api โดยอ้างอิงจาก [workflowreport.md](workflowreport.md)
 
 ### Note
 - การสร้าง procedure ช่วยลดเวลาคำนวน และ ช่วยในการลดความซับซ้อนของโค้ด
