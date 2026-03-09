@@ -4,8 +4,8 @@ begin declare v_date DATE;
 set
     v_date = curdate() - interval 2 DAY;
 
-call runTimeCard (v_date);
+call runTimeCard (v_date); -- insert_attendance.sql
 
-call runAttendance (v_date);
+call runAttendance (v_date); -- uopdate_attendance.sql
 
 end;
