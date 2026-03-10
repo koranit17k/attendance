@@ -80,15 +80,14 @@
             <div class="form-group">
                 <label>Report Name</label>
                 <select id="report">
-                    <option value="A01">A01</option>
-                    <option value="A02">A02</option>
-                    <option value="A03">A03</option>
+                    <option value="A01">1 เช็คเวลาประจำวัน</option>
+                    <option value="A02">2 ตรวจสอบรายบุคคล</option>
+                    <option value="A03">3 </option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label>Database</label>
-                <input type="text" id="db" value="payroll" />
+                <input type="hidden" id="db" value="payroll" />
             </div>
 
             <div class="form-group">
@@ -115,7 +114,7 @@
         </div>
 
         <script>
-            const BASE_URL = "http://localhost:8080/kxreport/getPDF"
+            const BASE_URL = "http://192.168.100.120:8080/kxreport/getPDF"
 
             function buildUrl() {
                 const report = document.getElementById("report").value
