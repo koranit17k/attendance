@@ -1,15 +1,159 @@
 <!doctype html>
-<html>
+<html lang="th">
     <head>
-        <title>ไทย</title>
+        <meta charset="UTF-8" />
+        <title>KxReport Viewer</title>
+
+        <style>
+            body {
+                font-family: Arial;
+                background: #f5f5f5;
+                margin: 30px;
+            }
+
+            .container {
+                max-width: 900px;
+                margin: auto;
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            h2 {
+                margin-bottom: 20px;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            label {
+                font-weight: bold;
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            input,
+            select {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 6px;
+            }
+
+            button {
+                padding: 10px 16px;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                background: #007bff;
+                color: white;
+                margin-right: 10px;
+            }
+
+            button:hover {
+                background: #0056b3;
+            }
+
+            iframe {
+                width: 100%;
+                height: 700px;
+                margin-top: 20px;
+                border: 1px solid #ccc;
+            }
+
+            .url-box {
+                margin-top: 15px;
+                padding: 10px;
+                background: #eee;
+                border-radius: 6px;
+                font-size: 14px;
+            }
+        </style>
     </head>
+
     <body>
-        koranit กรณิศ แก้วมณี
+        <div class="container">
+            <h2>KX Report Viewer</h2>
+
+            <div class="form-group">
+                <label>Report Name</label>
+                <select id="report">
+                    <option value="A01">A01</option>
+                    <option value="A02">A02</option>
+                    <option value="A03">A03</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Database</label>
+                <input type="text" id="db" value="payroll" />
+            </div>
+
+            <div class="form-group">
+                <label>Start Date</label>
+                <input type="date" id="startDate" value="2025-12-02" />
+            </div>
+
+            <div class="form-group">
+                <label>End Date</label>
+                <input type="date" id="endDate" value="2025-12-03" />
+            </div>
+
+            <div class="form-group">
+                <label>Company Code</label>
+                <input type="text" id="comCode" placeholder="เช่น 01" />
+            </div>
+
+            <button onclick="loadReport()">ดู PDF</button>
+            <button onclick="openNewTab()">เปิดแท็บใหม่</button>
+
+            <div class="url-box" id="urlBox"></div>
+
+            <iframe id="pdfFrame"></iframe>
+        </div>
+
+        <script>
+            const BASE_URL = "http://localhost:8080/kxreport/getPDF"
+
+            function buildUrl() {
+                const report = document.getElementById("report").value
+                const db = document.getElementById("db").value
+                const startDate = document.getElementById("startDate").value
+                const endDate = document.getElementById("endDate").value
+                const comCode = document.getElementById("comCode").value
+
+                if (!db || !report) {
+                    alert("กรุณากรอก database และ report")
+                    return null
+                }
+
+                const params = new URLSearchParams({
+                    report: report,
+                    db: db,
+                    startDate: startDate,
+                    endDate: endDate,
+                    comCode: comCode,
+                })
+
+                return BASE_URL + "?" + params.toString()
+            }
+
+            function loadReport() {
+                const url = buildUrl()
+                if (!url) return
+
+                document.getElementById("urlBox").innerText = url
+                document.getElementById("pdfFrame").src = url
+            }
+
+            function openNewTab() {
+                const url = buildUrl()
+                if (!url) return
+
+                window.open(url, "_blank")
+            }
+        </script>
     </body>
-
-    <script>
-    </script>
-
-    <style>
-    </style>
 </html>
