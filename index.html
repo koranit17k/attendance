@@ -83,7 +83,7 @@
                     <option value="A01">1 เช็คเวลาประจำวัน</option>
                     <option value="A02">2 ตรวจสอบรายบุคคล</option>
                     <option value="A03">3 </option>
-                </select>
+                </select>    
             </div>
 
             <div class="form-group">
@@ -101,8 +101,16 @@
             </div>
 
             <div class="form-group">
-                <label>Company Code</label>
-                <input type="text" id="comCode" placeholder="เช่น 01" />
+                <label>Company</label>
+                    <select id="comCode">
+                    <option value="01">1 กี่หิ้น การไฟฟ้าภูเก็ต</option>
+                    <option value="02">2 บ้านสุขภัณฑ์และวัสดุ</option>
+                    <option value="03">3 กี่หิ้น เทรดดิ้งจำกัด</option>
+                    <option value="04">4 เคบีคอมเมิร์ซจำกัด</option>
+                    <option value="05">5 กี่หิ้น เวอร์คชอพจำกัด</option>
+                    <option value="06">6 กี่หิ้น คอนเทร็คเตอร์จำกัด</option>
+                    <option value="07">7 พนักงานจ้าง</option>
+                </select>            
             </div>
 
             <button onclick="loadReport()">ดู PDF</button>
@@ -114,7 +122,7 @@
         </div>
 
         <script>
-            const BASE_URL = "http://192.168.100.120:8080/kxreport/getPDF"
+            const BASE_URL = "http://192.168.30.162:8080/kxreport/getPDF"
 
             function buildUrl() {
                 const report = document.getElementById("report").value

@@ -24,7 +24,7 @@ JOIN employee e
  AND v.empCode = e.empCode
 JOIN company c
   ON c.comCode = e.comCode
-WHERE v.dateAt between $P{startDate} and $P{endDate}
+WHERE  e.comCode = $P{comCode} and  v.dateAt between $P{startDate} and $P{endDate} 
 ORDER BY e.comCode,v.dateAt,e.empCode
 LIMIT 500]]></query>
 	<field name="comCode" class="java.lang.String">
@@ -296,7 +296,7 @@ new java.text.SimpleDateFormat("dd/MM/yyyy")
     )]]></expression>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</element>
-				<element kind="textField" uuid="c92a1ab1-926e-4a34-8c81-7a990c575ef0" x="0" y="21" width="132" height="20" fontName="Sarabun Thin" fontSize="12.0" hTextAlign="Center">
+				<element kind="textField" uuid="c92a1ab1-926e-4a34-8c81-7a990c575ef0" x="0" y="21" width="132" height="20" fontName="Sarabun Thin" fontSize="12.0" evaluationTime="Group" evaluationGroup="dategroup" hTextAlign="Center">
 					<expression><![CDATA[$F{company_name}]]></expression>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</element>
