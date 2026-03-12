@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ตัวเลือกช่วงวันที่รายงาน</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 32px;
+      font-family: Arial, sans-serif;
+      background: #05264a;
+      color: #0f172a;
+    }
+
+    .picker {
+      width: 100%;
+      max-width: 480px;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+      padding: 20px;
+    }
+
+    .date-fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .date-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+
+    .date-box-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #4b5563;
+      margin-bottom: 8px;
+    }
+
+    .date-input {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+      color: #111827;
+      background: #fff;
+      outline: none;
+    }
+
+    .date-input:focus {
+      border-color: #0284c7;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+    }
+
+    .date-input.invalid {
+      border-color: #dc2626;
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+    }
+
+    .preset-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .control-select {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 14px;
+      background: #fff;
+      color: #111827;
+      outline: none;
+    }
+
+    .control-select:focus {
+      border-color: #0284c7;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+    }
+
+    .calendar-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .calendar-head {
+      display: grid;
+      grid-template-columns: 40px 1fr 40px;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .nav-arrow {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      border-radius: 999px;
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .nav-arrow:hover {
+      background: #f8fafc;
+    }
+
+    .calendar-title {
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .weekdays,
+    .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .weekday {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+      padding: 8px 0;
+    }
+
+    .day {
+      height: 42px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f172a;
+      transition: 0.15s ease;
+    }
+
+    .day:hover {
+      background: #eff6ff;
+      border-color: #93c5fd;
+    }
+
+    .day.empty {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .day.start,
+    .day.end {
+      background: #0284c7 !important;
+      color: #fff !important;
+      border-color: #0284c7 !important;
+    }
+
+    .day.in-range,
+    .day.preview-range {
+      background: #e0f2fe;
+      color: #0f172a;
+      border-radius: 0;
+    }
+
+    .day.start.in-range,
+    .day.start.preview-range {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+
+    .day.end.in-range,
+    .day.end.preview-range {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+
+    .day.preview-end {
+      background: #dbeafe;
+      color: #0f172a;
+      border: 1px solid #93c5fd;
+    }
+
+    .actions {
+      margin-top: 16px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 14px;
+      cursor: pointer;
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    @media (max-width: 560px) {
+      body {
+        padding: 16px;
+      }
+
+      .date-fields,
+      .preset-controls {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="picker">
+    <div class="date-fields">
+      <div class="date-box">
+        <label class="date-box-label" for="startDateInput">startDate</label>
+        <input class="date-input" id="startDateInput" name="startDate" type="text" autocomplete="off" />
+      </div>
+
+      <div class="date-box">
+        <label class="date-box-label" for="endDateInput">endDate</label>
+        <input class="date-input" id="endDateInput" name="endDate" type="text" autocomplete="off" />
+      </div>
+    </div>
+
+    <input type="hidden" id="periodTypeInput" name="periodType" value="year" />
+
+    <div class="preset-controls">
+      <select id="yearSelect" class="control-select"></select>
+      <select id="monthSelect" class="control-select"></select>
+      <select id="quarterSelect" class="control-select"></select>
+    </div>
+
+    <div class="calendar-card">
+      <div class="calendar-head">
+        <button type="button" class="nav-arrow" id="prevBtn" aria-label="เดือนก่อนหน้า">
+          &#8249;
+        </button>
+
+        <div class="calendar-title" id="calendarTitle"></div>
+
+        <button type="button" class="nav-arrow" id="nextBtn" aria-label="เดือนถัดไป">
+          &#8250;
+        </button>
+      </div>
+
+      <div class="weekdays" id="weekdays"></div>
+      <div class="days" id="days"></div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn" id="clearBtn">ล้างค่า</button>
+    </div>
+  </div>
+
+  <script>
+    const monthNames = [
+      "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+      "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+    ];
+
+    const quarterNames = ["ไตรมาส 1", "ไตรมาส 2", "ไตรมาส 3", "ไตรมาส 4"];
+    const weekdays = ["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"];
+
+    const startDateInput = document.getElementById("startDateInput");
+    const endDateInput = document.getElementById("endDateInput");
+    const periodTypeInput = document.getElementById("periodTypeInput");
+
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const yearSelect = document.getElementById("yearSelect");
+    const monthSelect = document.getElementById("monthSelect");
+    const quarterSelect = document.getElementById("quarterSelect");
+    const clearBtn = document.getElementById("clearBtn");
+
+    const calendarTitle = document.getElementById("calendarTitle");
+    const weekdaysContainer = document.getElementById("weekdays");
+    const daysContainer = document.getElementById("days");
+
+    let startDate = null;
+    let endDate = null;
+    let hoverDate = null;
+    let activePreset = "year";
+
+const today = new Date(2025, 11, 1);
+today.setHours(0, 0, 0, 0);
+
+let viewMonth = 11;   // December
+let viewYear = 2025;
+
+    function normalizeDate(date) {
+      const d = new Date(date);
+      d.setHours(0, 0, 0, 0);
+      return d;
+    }
+
+    function formatISODate(date) {
+      if (!date) return "";
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function parseISODate(iso) {
+      const [y, m, d] = iso.split("-").map(Number);
+      const date = new Date(y, m - 1, d);
+      date.setHours(0, 0, 0, 0);
+      return date;
+    }
+
+    function parseUserDate(value) {
+      const text = value.trim();
+      if (!text) return null;
+
+      const match = text.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (!match) return null;
+
+      const year = Number(match[1]);
+      const month = Number(match[2]);
+      const day = Number(match[3]);
+
+      const date = new Date(year, month - 1, day);
+      date.setHours(0, 0, 0, 0);
+
+      const isValid =
+        date.getFullYear() === year &&
+        date.getMonth() === month - 1 &&
+        date.getDate() === day;
+
+      return isValid ? date : null;
+    }
+
+    function sameDate(a, b) {
+      return !!(a && b && a.getTime() === b.getTime());
+    }
+
+    function normalizeRange(a, b) {
+      if (!a || !b) return null;
+      return a.getTime() <= b.getTime()
+        ? { start: a, end: b }
+        : { start: b, end: a };
+    }
+
+    function isBetweenInclusive(date, start, end) {
+      return !!(
+        start &&
+        end &&
+        date.getTime() >= start.getTime() &&
+        date.getTime() <= end.getTime()
+      );
+    }
+
+    function getPreviewRange() {
+      if (!startDate || endDate || !hoverDate) return null;
+      return normalizeRange(startDate, hoverDate);
+    }
+
+    function getLastDayOfMonth(year, month) {
+      return new Date(year, month + 1, 0).getDate();
+    }
+
+    function getQuarterByMonth(month) {
+      return Math.floor(month / 3);
+    }
+
+    function setInputsFromState() {
+      startDateInput.value = startDate ? formatISODate(startDate) : "";
+      endDateInput.value = endDate ? formatISODate(endDate) : "";
+      startDateInput.classList.remove("invalid");
+      endDateInput.classList.remove("invalid");
+    }
+
+    function renderWeekdays() {
+      weekdaysContainer.innerHTML = "";
+      weekdays.forEach((day) => {
+        const el = document.createElement("div");
+        el.className = "weekday";
+        el.textContent = day;
+        weekdaysContainer.appendChild(el);
+      });
+    }
+
+    function renderYearOptions() {
+      yearSelect.innerHTML = "";
+      const startYear = today.getFullYear() - 10;
+      const endYear = today.getFullYear() + 10;
+
+      for (let year = startYear; year <= endYear; year++) {
+        const option = document.createElement("option");
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+      }
+    }
+
+    function renderMonthOptions() {
+      monthSelect.innerHTML = "";
+
+      const allOption = document.createElement("option");
+      allOption.value = "";
+      allOption.textContent = "เดือน";
+      monthSelect.appendChild(allOption);
+
+      monthNames.forEach((name, index) => {
+        const option = document.createElement("option");
+        option.value = index;
+        option.textContent = name;
+        monthSelect.appendChild(option);
+      });
+    }
+
+    function renderQuarterOptions() {
+      quarterSelect.innerHTML = "";
+
+      const emptyOption = document.createElement("option");
+      emptyOption.value = "";
+      emptyOption.textContent = "ไตรมาส";
+      quarterSelect.appendChild(emptyOption);
+
+      quarterNames.forEach((name, index) => {
+        const option = document.createElement("option");
+        option.value = index;
+        option.textContent = name;
+        quarterSelect.appendChild(option);
+      });
+    }
+
+    function updateCalendarTitle() {
+      calendarTitle.textContent = `${monthNames[viewMonth]} ${viewYear}`;
+    }
+
+    function renderMonthGrid() {
+      daysContainer.innerHTML = "";
+
+      const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+      const lastDate = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+      for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement("button");
+        empty.type = "button";
+        empty.className = "day empty";
+        daysContainer.appendChild(empty);
+      }
+
+      for (let d = 1; d <= lastDate; d++) {
+        const date = new Date(viewYear, viewMonth, d);
+        date.setHours(0, 0, 0, 0);
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "day";
+        btn.textContent = d;
+        btn.dataset.date = formatISODate(date);
+
+        btn.addEventListener("mouseenter", () => {
+          if (startDate && !endDate) {
+            hoverDate = date;
+            paintDayStates();
+          }
+        });
+
+        btn.addEventListener("click", () => {
+          selectDay(date);
+        });
+
+        daysContainer.appendChild(btn);
+      }
+    }
+
+    function paintDayStates() {
+      const previewRange = getPreviewRange();
+      const allDays = document.querySelectorAll(".day[data-date]");
+
+      allDays.forEach((btn) => {
+        btn.classList.remove(
+          "start",
+          "end",
+          "in-range",
+          "preview-range",
+          "preview-end"
+        );
+
+        const date = parseISODate(btn.dataset.date);
+
+        if (sameDate(date, startDate)) btn.classList.add("start");
+        if (sameDate(date, endDate)) btn.classList.add("end");
+
+        if (startDate && endDate) {
+          if (isBetweenInclusive(date, startDate, endDate)) {
+            btn.classList.add("in-range");
+          }
+        } else if (previewRange) {
+          if (isBetweenInclusive(date, previewRange.start, previewRange.end)) {
+            btn.classList.add("preview-range");
+          }
+          if (hoverDate && sameDate(date, hoverDate) && !sameDate(date, startDate)) {
+            btn.classList.add("preview-end");
+          }
+        }
+      });
+    }
+
+    function renderCalendar() {
+      updateCalendarTitle();
+      renderMonthGrid();
+      paintDayStates();
+    }
+
+    function applyYearRange(year) {
+      activePreset = "year";
+      periodTypeInput.value = "year";
+
+      startDate = new Date(year, 0, 1);
+      endDate = new Date(year, 11, 31);
+      startDate.setHours(0, 0, 0, 0);
+      endDate.setHours(0, 0, 0, 0);
+
+      viewYear = year;
+      viewMonth = 0;
+      hoverDate = null;
+
+      setInputsFromState();
+      renderCalendar();
+    }
+
+    function applyMonthRange(year, month) {
+      activePreset = "month";
+      periodTypeInput.value = "month";
+
+      startDate = new Date(year, month, 1);
+      endDate = new Date(year, month, getLastDayOfMonth(year, month));
+      startDate.setHours(0, 0, 0, 0);
+      endDate.setHours(0, 0, 0, 0);
+
+      viewYear = year;
+      viewMonth = month;
+      hoverDate = null;
+
+      setInputsFromState();
+      renderCalendar();
+    }
+
+    function applyQuarterRange(year, quarterIndex) {
+      activePreset = "quarter";
+      periodTypeInput.value = "quarter";
+
+      const startMonth = quarterIndex * 3;
+      const endMonth = startMonth + 2;
+
+      startDate = new Date(year, startMonth, 1);
+      endDate = new Date(year, endMonth, getLastDayOfMonth(year, endMonth));
+      startDate.setHours(0, 0, 0, 0);
+      endDate.setHours(0, 0, 0, 0);
+
+      viewYear = year;
+      viewMonth = startMonth;
+      hoverDate = null;
+
+      setInputsFromState();
+      renderCalendar();
+    }
+
+    function applyPresetFromSelectors(source = "") {
+      const year = Number(yearSelect.value);
+
+      if (source === "month" && monthSelect.value !== "") {
+        quarterSelect.value = "";
+      }
+
+      if (source === "quarter" && quarterSelect.value !== "") {
+        monthSelect.value = "";
+      }
+
+      if (monthSelect.value !== "") {
+        applyMonthRange(year, Number(monthSelect.value));
+        return;
+      }
+
+      if (quarterSelect.value !== "") {
+        applyQuarterRange(year, Number(quarterSelect.value));
+        return;
+      }
+
+      applyYearRange(year);
+    }
+
+    function shiftViewMonth(step) {
+      const next = new Date(viewYear, viewMonth + step, 1);
+      viewYear = next.getFullYear();
+      viewMonth = next.getMonth();
+      renderCalendar();
+    }
+
+    function selectDay(date) {
+      activePreset = "custom";
+      periodTypeInput.value = "custom";
+
+      date = normalizeDate(date);
+
+      if (!startDate || endDate) {
+        startDate = date;
+        endDate = null;
+        hoverDate = null;
+      } else {
+        const range = normalizeRange(startDate, date);
+        startDate = range.start;
+        endDate = range.end;
+        hoverDate = null;
+      }
+
+      viewYear = date.getFullYear();
+      viewMonth = date.getMonth();
+
+      setInputsFromState();
+      renderCalendar();
+    }
+
+    function applyTypedDates() {
+      const startRaw = startDateInput.value.trim();
+      const endRaw = endDateInput.value.trim();
+
+      const startParsed = parseUserDate(startRaw);
+      const endParsed = parseUserDate(endRaw);
+
+      const isStartValid = startRaw === "" || !!startParsed;
+      const isEndValid = endRaw === "" || !!endParsed;
+
+      startDateInput.classList.toggle("invalid", !isStartValid);
+      endDateInput.classList.toggle("invalid", !isEndValid);
+
+      if (!isStartValid || !isEndValid) return;
+
+      if (!startRaw && !endRaw) {
+        monthSelect.value = "";
+        quarterSelect.value = "";
+        yearSelect.value = String(today.getFullYear());
+        applyYearRange(Number(yearSelect.value));
+        return;
+      }
+
+      activePreset = "custom";
+      periodTypeInput.value = "custom";
+      hoverDate = null;
+
+      if (startParsed && endParsed) {
+        const range = normalizeRange(startParsed, endParsed);
+        startDate = range.start;
+        endDate = range.end;
+        viewYear = startDate.getFullYear();
+        viewMonth = startDate.getMonth();
+      } else if (startParsed && !endParsed) {
+        startDate = startParsed;
+        endDate = null;
+        viewYear = startDate.getFullYear();
+        viewMonth = startDate.getMonth();
+      } else if (!startParsed && endParsed) {
+        startDate = null;
+        endDate = endParsed;
+        viewYear = endDate.getFullYear();
+        viewMonth = endDate.getMonth();
+      }
+
+      setInputsFromState();
+      renderCalendar();
+    }
+
+    function maybeApplyTypedDates() {
+      const startRaw = startDateInput.value.trim();
+      const endRaw = endDateInput.value.trim();
+
+      const ready =
+        (startRaw === "" || startRaw.length === 10) &&
+        (endRaw === "" || endRaw.length === 10);
+
+      if (ready) {
+        applyTypedDates();
+      }
+    }
+
+    function bindInputEvents(input) {
+      input.addEventListener("input", () => {
+        input.classList.remove("invalid");
+        maybeApplyTypedDates();
+      });
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          applyTypedDates();
+        }
+      });
+
+      input.addEventListener("blur", applyTypedDates);
+      input.addEventListener("change", applyTypedDates);
+    }
+
+    prevBtn.addEventListener("click", () => {
+      shiftViewMonth(-1);
+    });
+
+    nextBtn.addEventListener("click", () => {
+      shiftViewMonth(1);
+    });
+
+    yearSelect.addEventListener("change", () => {
+      applyPresetFromSelectors("year");
+    });
+
+    monthSelect.addEventListener("change", () => {
+      applyPresetFromSelectors("month");
+    });
+
+    quarterSelect.addEventListener("change", () => {
+      applyPresetFromSelectors("quarter");
+    });
+
+    daysContainer.addEventListener("mouseleave", () => {
+      if (startDate && !endDate) {
+        hoverDate = null;
+        paintDayStates();
+      }
+    });
+
+    clearBtn.addEventListener("click", () => {
+      startDate = null;
+      endDate = null;
+      hoverDate = null;
+      activePreset = "year";
+      periodTypeInput.value = "year";
+      yearSelect.value = String(today.getFullYear());
+      monthSelect.value = "";
+      quarterSelect.value = "";
+      applyYearRange(Number(yearSelect.value));
+    });
+
+    bindInputEvents(startDateInput);
+    bindInputEvents(endDateInput);
+
+    renderYearOptions();
+    renderMonthOptions();
+    renderQuarterOptions();
+    renderWeekdays();
+
+yearSelect.value = "2025";
+monthSelect.value = "11";
+quarterSelect.value = "";
+
+applyMonthRange(2025, 11);
+  </script>
+</body>
+</html>

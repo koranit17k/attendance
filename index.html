@@ -23,14 +23,49 @@
 
                 <input type="hidden" name="db" id="db" value="payroll" />
 
-                <div class="form-group">
-                    <label>Start Date</label>
-                    <input type="date" name="startDate" id="startDate" value="2025-12-02" />
-                </div>
+                <div class="picker">
+                    <div class="date-fields">
+                        <div class="date-box">
+                            <label class="date-box-label" for="startDateInput">startDate</label>
+                            <input class="date-input" id="startDateInput" type="text" autocomplete="off" />
+                            <input type="hidden" name="startDate" id="startDate" value="2025-12-02" />
+                        </div>
 
-                <div class="form-group">
-                    <label>End Date</label>
-                    <input type="date" name="endDate" id="endDate" value="2025-12-03" />
+                        <div class="date-box">
+                            <label class="date-box-label" for="endDateInput">endDate</label>
+                            <input class="date-input" id="endDateInput" type="text" autocomplete="off" />
+                            <input type="hidden" name="endDate" id="endDate" value="2025-12-03" />
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="periodTypeInput" name="periodType" value="year" />
+
+                    <div class="preset-controls">
+                        <select id="yearSelect" class="control-select"></select>
+                        <select id="monthSelect" class="control-select"></select>
+                        <select id="quarterSelect" class="control-select"></select>
+                    </div>
+
+                    <div class="calendar-card">
+                        <div class="calendar-head">
+                            <button type="button" class="nav-arrow" id="prevBtn" aria-label="เดือนก่อนหน้า">
+                                &#8249;
+                            </button>
+
+                            <div class="calendar-title" id="calendarTitle"></div>
+
+                            <button type="button" class="nav-arrow" id="nextBtn" aria-label="เดือนถัดไป">
+                                &#8250;
+                            </button>
+                        </div>
+
+                        <div class="weekdays" id="weekdays"></div>
+                        <div class="days" id="days"></div>
+                    </div>
+
+                    <div class="actions">
+                        <button type="button" class="btn-clear" id="clearBtn">ล้างค่า</button>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -47,8 +82,10 @@
                 </div>
             </form>
 
-            <button onclick="getPDF()">getPDF</button>
-            <button onclick="openPDF()">openPDF</button>
+            <div class="button-group">
+                <button class="btn-primary" onclick="getPDF()">getPDF</button>
+                <button class="btn-primary" onclick="openPDF()">openPDF</button>
+            </div>
         </div>
 
         <script src="main.js"></script>

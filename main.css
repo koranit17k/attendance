@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial;
     background: #f5f5f5;
@@ -48,4 +52,238 @@ button {
 
 button:hover {
     background: #0056b3;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.btn-primary {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    flex: 1;
+    max-width: 200px;
+}
+
+/* Calendar Picker Styles */
+.picker {
+  width: 100%;
+  max-width: 480px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+  padding: 20px;
+  margin: 20px auto; /* Centered */
+}
+
+.date-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.date-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.date-box-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #4b5563;
+  margin-bottom: 8px;
+}
+
+.date-input {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #111827;
+  background: #fff;
+  outline: none;
+}
+
+.date-input:focus {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+}
+
+.date-input.invalid {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.preset-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.control-select {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  background: #fff;
+  color: #111827;
+  outline: none;
+}
+
+.control-select:focus {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+}
+
+.calendar-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 12px; /* Reduced from 16px */
+  width: 100%;
+  overflow: hidden;
+}
+
+.calendar-head {
+  display: grid;
+  grid-template-columns: 32px 1fr 32px; /* Slightly smaller arrows */
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.nav-arrow {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  border-radius: 50%;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.nav-arrow:hover {
+  background: #f8fafc;
+}
+
+.calendar-title {
+  text-align: center;
+  font-size: 16px; /* Slightly smaller */
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.weekdays,
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px; /* Reduced from 6px */
+}
+
+.weekday {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  padding: 4px 0;
+}
+
+.day {
+  width: 100%;
+  height: 38px; /* Slightly smaller */
+  padding: 0; /* Reset button padding */
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  transition: 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0; /* Prevent overflow */
+}
+
+.day:hover {
+  background: #eff6ff;
+  border-color: #93c5fd;
+}
+
+.day.empty {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.day.start,
+.day.end {
+  background: #0284c7 !important;
+  color: #fff !important;
+  border-color: #0284c7 !important;
+}
+
+.day.in-range,
+.day.preview-range {
+  background: #e0f2fe;
+  color: #0f172a;
+  border-radius: 0;
+}
+
+.day.start.in-range,
+.day.start.preview-range {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.day.end.in-range,
+.day.end.preview-range {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.day.preview-end {
+  background: #dbeafe;
+  color: #0f172a;
+  border: 1px solid #93c5fd;
+}
+
+.actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-clear {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  background: #e5e7eb;
+  color: #111827;
+}
+
+@media (max-width: 560px) {
+  .date-fields,
+  .preset-controls {
+    grid-template-columns: 1fr;
+  }
 }
