@@ -2,6 +2,7 @@
 <html lang="th">
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>KxReport Viewer</title>
 
         <link rel="stylesheet" href="main.css">
@@ -9,7 +10,10 @@
 
     <body>
         <div class="container">
-            <h2>KX Report Viewer</h2>
+            <header class="header">
+                <img src="img/KEEHIN.png" alt="KEEHIN Logo" class="logo">
+                <h2>KX Report Viewer</h2>
+            </header>
 
             <form id="form">
                 <div class="form-group">
@@ -38,7 +42,7 @@
                         </div>
                     </div>
 
-                    <input type="hidden" id="periodTypeInput" name="periodType" value="year" />
+                    <input type="hidden" id="periodTypeInput" value="year" />
 
                     <div class="preset-controls">
                         <select id="yearSelect" class="control-select"></select>
@@ -69,7 +73,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Company</label>
+                    <label>Company Name</label>
                     <select name="comCode" id="comCode">
                         <option value="01">1 กี่หิ้น การไฟฟ้าภูเก็ต</option>
                         <option value="02">2 บ้านสุขภัณฑ์และวัสดุ</option>
@@ -91,4 +95,3 @@
         <script src="main.js"></script>
     </body>
 </html>
-<!-- พรุ่งนี้ออกแบบ frontendเพิ่ม ให้สวยมีความสมูท calenda เป็นเลือกช่วงเวลาได้ หรือ แบบพิมเวลา, ดูโครง report 2,3,4-->

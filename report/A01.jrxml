@@ -296,7 +296,7 @@ new java.text.SimpleDateFormat("dd/MM/yyyy")
     )]]></expression>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</element>
-				<element kind="textField" uuid="c92a1ab1-926e-4a34-8c81-7a990c575ef0" x="0" y="21" width="132" height="20" fontName="Sarabun Thin" fontSize="12.0" evaluationTime="Group" evaluationGroup="dategroup" hTextAlign="Center">
+				<element kind="textField" uuid="c92a1ab1-926e-4a34-8c81-7a990c575ef0" x="0" y="21" width="187" height="20" fontName="Sarabun Thin" fontSize="12.0" evaluationTime="Group" evaluationGroup="dategroup" hTextAlign="Center">
 					<expression><![CDATA[$F{company_name}]]></expression>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</element>

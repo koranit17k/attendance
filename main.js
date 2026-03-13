@@ -11,7 +11,6 @@ function getFormDataAsJson() {
 }
 
 function getPDF() {
-    console.log("testgetpdf 1")
     const data = getFormDataAsJson()
     const params = new URLSearchParams(data)
     const url = BASE_URL + "getPDF?" + params.toString()
@@ -19,7 +18,6 @@ function getPDF() {
 }
 
 async function openPDF() {
-    console.log("testopenpdf 2")
     const reportWindow = openWin()
     try {
         const data = getFormDataAsJson()
@@ -35,7 +33,6 @@ async function openPDF() {
         if (!response.ok) {
             throw new Error(`Service call failed with status: ${response.status}`)
         }
-        // reportWindow.location.href = BASE_URL + (await response.text())
         const blob = await response.blob();
         const blobUrl = URL.createObjectURL(blob);
         reportWindow.location.href = blobUrl;
