@@ -1,4 +1,4 @@
-const BASE_URL = "http://192.168.30.162:8080/kxreport/"
+const BASE_URL = "http://localhost:8080/kxreport/"
 
 function openWin() {
     return window.open("", "_blank")
