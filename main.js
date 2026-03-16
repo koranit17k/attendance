@@ -6,42 +6,94 @@ function openWin() {
 
 function getFormDataAsJson() {
     const form = document.getElementById("form")
-    const data = Object.fromEntries(new FormData(form).entries())
+    const formData = new FormData(form)
+    const data = {}
+    for (let [key, value] of formData.entries()) {
+        if (data[key] !== undefined) {
+            if (!Array.isArray(data[key])) {
+                data[key] = [data[key]]
+            }
+            data[key].push(value)
+        } else {
+            data[key] = value
+        }
+    }
     return data
 }
 
 function getPDF() {
     const data = getFormDataAsJson()
-    const params = new URLSearchParams(data)
-    const url = BASE_URL + "getPDF?" + params.toString()
-    window.open(url, "_blank")
+    const reports = Array.isArray(data.report) ? data.report : [data.report]
+    const comCodes = Array.isArray(data.comCode) ? data.comCode : [data.comCode]
+    
+    // Filter out undefined in case nothing is selected
+    const validReports = reports.filter(r => r)
+    const validComCodes = comCodes.filter(c => c)
+    
+    if (validReports.length === 0 || validComCodes.length === 0) {
+        alert("กรุณาเลือก Report Name และ Company Name อย่างน้อย 1 รายการ")
+        return
+    }
+
+    for (const report of validReports) {
+        for (const comCode of validComCodes) {
+            // Clone the original data and override report/comCode for this specific tab
+            const payload = { ...data, report, comCode }
+            const params = new URLSearchParams(payload)
+            const url = BASE_URL + "getPDF?" + params.toString()
+            window.open(url, "_blank")
+        }
+    }
 }
 
 async function openPDF() {
-    const reportWindow = openWin()
-    try {
-        const data = getFormDataAsJson()
+    const data = getFormDataAsJson()
+    const reports = Array.isArray(data.report) ? data.report : [data.report]
+    const comCodes = Array.isArray(data.comCode) ? data.comCode : [data.comCode]
+    
+    const validReports = reports.filter(r => r)
+    const validComCodes = comCodes.filter(c => c)
+    
+    if (validReports.length === 0 || validComCodes.length === 0) {
+        alert("กรุณาเลือก Report Name และ Company Name อย่างน้อย 1 รายการ")
+        return
+    }
 
-        const response = await fetch(BASE_URL + "openPDF", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        })
-
-        if (!response.ok) {
-            throw new Error(`Service call failed with status: ${response.status}`)
-        }
-        const blob = await response.blob();
-        const blobUrl = URL.createObjectURL(blob);
-        reportWindow.location.href = blobUrl;
-    } catch (error) {
-        console.error("Error calling FilePDF:", error)
-        alert(`KX Report Error: ${error.message}`)
-
-        if (reportWindow) {
-            reportWindow.close()
+    // Process each combination sequentially to handle pop-up blockers potentially
+    for (const report of validReports) {
+        for (const comCode of validComCodes) {
+            const payload = { ...data, report, comCode }
+            
+            // Open window before fetch to avoid popup blocker
+            const reportWindow = openWin()
+            if (!reportWindow) {
+                alert("Please allow pop-ups for this site to open multiple reports.");
+                return; // Stop processing if popup blocker is active
+            }
+            
+            try {
+                const response = await fetch(BASE_URL + "openPDF", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(payload),
+                })
+        
+                if (!response.ok) {
+                    throw new Error(`Service call failed with status: ${response.status}`)
+                }
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                reportWindow.location.href = blobUrl;
+            } catch (error) {
+                console.error("Error calling openPDF:", error)
+                alert(`KX Report Error (${report} - ${comCode}): ${error.message}`)
+        
+                if (reportWindow) {
+                    reportWindow.close()
+                }
+            }
         }
     }
 }
@@ -248,6 +300,7 @@ function renderMonthGrid() {
     btn.className = "day";
     btn.textContent = d;
     btn.dataset.date = formatISODate(date);
+    btn.tabIndex = 0; // Make focusable
 
     btn.addEventListener("mouseenter", () => {
       if (startDate && !endDate) {
@@ -258,6 +311,96 @@ function renderMonthGrid() {
 
     btn.addEventListener("click", () => {
       selectDay(date);
+    });
+
+    // Keyboard navigation
+    btn.addEventListener("keydown", (e) => {
+      const allDays = Array.from(daysContainer.querySelectorAll(".day:not(.empty)"));
+      const currentIndex = allDays.indexOf(btn);
+      
+      // Determine what day of the week this button represents (0=Sun, 6=Sat)
+      const dayOfWeek = date.getDay();
+
+      let targetIndex = null;
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        if (dayOfWeek === 6 || currentIndex === allDays.length - 1) { // Saturday or last day
+          shiftViewMonth(1);
+          setTimeout(() => {
+            const freshDays = Array.from(daysContainer.querySelectorAll(".day:not(.empty)"));
+            if (freshDays.length > 0) {
+              // Try to stay on the same row roughly, or just first day of next week
+              freshDays[0].focus();
+            }
+          }, 10);
+          return;
+        }
+        targetIndex = currentIndex + 1;
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        if (dayOfWeek === 0 || currentIndex === 0) { // Sunday or first day
+          shiftViewMonth(-1);
+          setTimeout(() => {
+            const freshDays = Array.from(daysContainer.querySelectorAll(".day:not(.empty)"));
+            if (freshDays.length > 0) freshDays[freshDays.length - 1].focus();
+          }, 10);
+          return;
+        }
+        targetIndex = currentIndex - 1;
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (currentIndex + 7 >= allDays.length) {
+          // Bottom row -> clearBtn
+          const clearBtn = document.getElementById("clearBtn");
+          if (clearBtn) clearBtn.focus();
+          return;
+        }
+        targetIndex = currentIndex + 7;
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (currentIndex - 7 < 0) {
+          // Top row -> goes back to year Select
+          const ySel = document.getElementById("yearSelect");
+          if (ySel) ySel.focus();
+          return;
+        }
+        targetIndex = currentIndex - 7;
+      } else if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        // Fire click event to leverage existing selectDay logic seamlessly
+        btn.click(); 
+
+        // Important: After a click redraws the calendar, we need to restore focus!
+        setTimeout(() => {
+          const freshDays = Array.from(daysContainer.querySelectorAll(".day:not(.empty)"));
+          // Re-find the button for this exact date
+          const dateStr = btn.dataset.date;
+          const newBtn = freshDays.find(b => b.dataset.date === dateStr);
+          if (newBtn) {
+              newBtn.focus();
+              // Prevent default click-induced mouseenter bugs
+              if (!endDate) {
+                 hoverDate = parseISODate(dateStr);
+                 paintDayStates();
+              }
+          }
+        }, 10);
+        return;
+      }
+
+      if (targetIndex !== null && targetIndex >= 0 && targetIndex < allDays.length) {
+        // Must use setTimeout to allow DOM to catch breath before focus, especially if shifted month
+        setTimeout(() => {
+          const freshDays = Array.from(daysContainer.querySelectorAll(".day:not(.empty)"));
+          if(freshDays[targetIndex]) freshDays[targetIndex].focus();
+        }, 10);
+        
+        // Update hoverDate for preview functionality if a start date is already selected
+        if (startDate && !endDate) {
+          hoverDate = parseISODate(allDays[targetIndex].dataset.date);
+          paintDayStates();
+        }
+      }
     });
 
     daysContainer.appendChild(btn);
@@ -569,6 +712,28 @@ function initCalendar() {
     applyYearRange(Number(yearSelect.value));
   });
 
+  // clear btn keyboard nav
+  clearBtn.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      const cGroup = document.getElementById('comCode');
+      const cCheckboxes = cGroup ? Array.from(cGroup.querySelectorAll('input[type="checkbox"]')) : [];
+      if (cCheckboxes.length > 0) cCheckboxes[0].focus();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      const daysContainer = document.getElementById("days");
+      const allDays = Array.from(daysContainer.querySelectorAll(".day:not(.empty)"));
+      if (allDays.length > 0) allDays[allDays.length - 1].focus(); // Focus last day
+    } else if (e.key === "Enter" || e.key === " ") {
+      // Allow default button click handling
+      setTimeout(() => {
+        const cGroup = document.getElementById('comCode');
+        const cCheckboxes = cGroup ? Array.from(cGroup.querySelectorAll('input[type="checkbox"]')) : [];
+        if (cCheckboxes.length > 0) cCheckboxes[0].focus();
+      }, 50);
+    }
+  });
+
   bindInputEvents(startDateInput);
   bindInputEvents(endDateInput);
 
@@ -582,7 +747,138 @@ function initCalendar() {
   quarterSelect.value = "";
 
   applyMonthRange(2025, 11);
+
+  initAdvancedKeyboardNav();
+}
+
+function initAdvancedKeyboardNav() {
+  const rGroup = document.getElementById('report');
+  const cGroup = document.getElementById('comCode');
+  const rCheckboxes = rGroup ? Array.from(rGroup.querySelectorAll('input[type="checkbox"]')) : [];
+  const cCheckboxes = cGroup ? Array.from(cGroup.querySelectorAll('input[type="checkbox"]')) : [];
+
+  const sDate = document.getElementById("startDateInput");
+  const eDate = document.getElementById("endDateInput");
+  const ySel = document.getElementById("yearSelect");
+  const mSel = document.getElementById("monthSelect");
+  const qSel = document.getElementById("quarterSelect");
+
+  // Helper to focus safely
+  const focusEl = (el) => el && el.focus();
+
+  // Report Nav
+  rCheckboxes.forEach((cb, i) => {
+    cb.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (i === rCheckboxes.length - 1) focusEl(sDate);
+        else focusEl(rCheckboxes[i + 1]);
+      } else if (e.key === 'ArrowUp') {
+        if (i > 0) {
+          e.preventDefault();
+          focusEl(rCheckboxes[i - 1]);
+        }
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        cb.click();
+      }
+    });
+  });
+
+  // Dates Nav
+  if (sDate) {
+    sDate.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" && sDate.selectionStart === sDate.value.length) {
+        e.preventDefault();
+        focusEl(eDate);
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        focusEl(ySel);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        focusEl(rCheckboxes[rCheckboxes.length - 1]);
+      }
+    });
+  }
+
+  if (eDate) {
+    eDate.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft" && eDate.selectionStart === 0) {
+        e.preventDefault();
+        focusEl(sDate);
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        focusEl(mSel);
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        focusEl(rCheckboxes[rCheckboxes.length - 1]);
+      }
+    });
+  }
+
+  // Selects Nav (Year/Month/Quarter)
+  const focusFirstDay = () => {
+    // Timeout needed in case UI was just updated
+    setTimeout(() => {
+      const daysContainer = document.getElementById("days");
+      if (!daysContainer) return;
+      const firstDay = daysContainer.querySelector(".day:not(.empty)");
+      if (firstDay) firstDay.focus();
+    }, 10);
+  };
+
+  const handleSelectNav = (sel, e) => {
+    // If alt is pressed, let native browser dropdown work
+    if (e.altKey) return;
+    
+    if (e.key === "ArrowRight") {
+      if (sel === ySel) { e.preventDefault(); focusEl(mSel); }
+      else if (sel === mSel) { e.preventDefault(); focusEl(qSel); }
+      else if (sel === qSel) { e.preventDefault(); focusFirstDay(); }
+    } else if (e.key === "ArrowLeft") {
+      if (sel === qSel) { e.preventDefault(); focusEl(mSel); }
+      else if (sel === mSel) { e.preventDefault(); focusEl(ySel); }
+      else if (sel === ySel) { e.preventDefault(); focusEl(eDate); }
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      focusFirstDay();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (sel === ySel) focusEl(sDate);
+      else if (sel === mSel || sel === qSel) focusEl(eDate);
+    }
+  };
+
+  [ySel, mSel, qSel].forEach(sel => {
+    if (sel) sel.addEventListener('keydown', (e) => handleSelectNav(sel, e));
+  });
+
+  // Company Nav
+  cCheckboxes.forEach((cb, i) => {
+    cb.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') {
+        if (i < cCheckboxes.length - 1) {
+          e.preventDefault();
+          focusEl(cCheckboxes[i + 1]);
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (i === 0) {
+          const clearBtn = document.getElementById("clearBtn");
+          if (clearBtn) focusEl(clearBtn);
+        }
+        else focusEl(cCheckboxes[i - 1]);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        cb.click();
+      }
+    });
+  });
 }
 
 // Initialize when DOM is loaded
-document.addEventListener("DOMContentLoaded", initCalendar);
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("form");
+    if (form) form.addEventListener("submit", (e) => e.preventDefault());
+    initCalendar();
+});

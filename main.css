@@ -43,13 +43,36 @@ label {
     margin-bottom: 5px;
 }
 
-input,
+input:not([type="checkbox"]):not([type="radio"]),
 select {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 6px;
     box-sizing: border-box;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 5px 0;
+}
+
+.checkbox-group label {
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    cursor: pointer;
 }
 
 button {
@@ -249,9 +272,11 @@ button:hover {
   min-width: 0; /* Prevent overflow */
 }
 
-.day:hover {
+.day:hover,
+.day:focus {
   background: #eff6ff;
   border-color: #93c5fd;
+  outline: none; /* Remove default browser outline */
 }
 
 .day.empty {
@@ -317,7 +342,6 @@ button:hover {
 }
 
 @media (max-width: 560px) {
-  .date-fields,
   .preset-controls {
     grid-template-columns: 1fr;
   }
@@ -347,6 +371,20 @@ button:hover {
     padding: 12px 8px;
     border-radius: 12px;
     margin: 10px auto;
+  }
+  
+  .date-box {
+    padding: 8px 6px;
+  }
+  
+  .date-box-label {
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+  
+  .date-input {
+    padding: 6px 4px;
+    font-size: 12px;
   }
 
   .calendar-head {
@@ -381,6 +419,19 @@ button:hover {
   
   .picker {
     padding: 8px 4px;
+  }
+  
+  .date-fields {
+    gap: 4px;
+  }
+  
+  .date-box {
+    padding: 6px 4px;
+  }
+  
+  .date-input {
+    font-size: 11px;
+    padding: 6px 2px;
   }
   
   .day {

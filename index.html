@@ -15,11 +15,13 @@
             <form id="form">
                 <div class="form-group">
                     <label>Report Name</label>
-                    <select name="report" id="report">
-                        <option value="A01">1 เช็คเวลาประจำวัน</option>
-                        <option value="A02">2 ตรวจสอบรายบุคคล</option>
-                        <option value="A03">3</option>
-                    </select>
+                    <div id="report" class="checkbox-group">
+                        <label><input type="checkbox" name="report" value="A01"> 1 เช็คเวลาประจำวัน</label>
+                        <label><input type="checkbox" name="report" value="A02"> 2 ตรวจสอบรายบุคคล</label>
+                        <label><input type="checkbox" name="report" value="A03"> 3</label>
+                        <label><input type="checkbox" name="report" value="A04"> 4</label>
+                        <label><input type="checkbox" name="report" value="A05"> 5</label>
+                    </div>
                 </div>
 
                 <input type="hidden" name="db" id="db" value="payroll" />
@@ -71,15 +73,15 @@
 
                 <div class="form-group">
                     <label>Company Name</label>
-                    <select name="comCode" id="comCode">
-                        <option value="01">1 กี่หิ้น การไฟฟ้าภูเก็ต</option>
-                        <option value="02">2 บ้านสุขภัณฑ์และวัสดุ</option>
-                        <option value="03">3 กี่หิ้น เทรดดิ้งจำกัด</option>
-                        <option value="04">4 เคบีคอมเมิร์ซจำกัด</option>
-                        <option value="05">5 กี่หิ้น เวอร์คชอพจำกัด</option>
-                        <option value="06">6 กี่หิ้น คอนเทร็คเตอร์จำกัด</option>
-                        <option value="07">7 พนักงานจ้าง</option>
-                    </select>
+                    <div id="comCode" class="checkbox-group">
+                        <label><input type="checkbox" name="comCode" value="01"> 1 กี่หิ้น การไฟฟ้าภูเก็ต</label>
+                        <label><input type="checkbox" name="comCode" value="02"> 2 บ้านสุขภัณฑ์และวัสดุ</label>
+                        <label><input type="checkbox" name="comCode" value="03"> 3 กี่หิ้น เทรดดิ้งจำกัด</label>
+                        <label><input type="checkbox" name="comCode" value="04"> 4 เคบีคอมเมิร์ซจำกัด</label>
+                        <label><input type="checkbox" name="comCode" value="05"> 5 กี่หิ้น เวอร์คชอพจำกัด</label>
+                        <label><input type="checkbox" name="comCode" value="06"> 6 กี่หิ้น คอนเทร็คเตอร์จำกัด</label>
+                        <label><input type="checkbox" name="comCode" value="07"> 7 พนักงานจ้าง</label>
+                    </div>
                 </div>
             </form>
 
