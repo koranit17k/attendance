@@ -111,6 +111,7 @@ let startDate = null;
 let endDate = null;
 let hoverDate = null;
 let activePreset = "year";
+let isSelecting = false;
 
 const today = new Date(2025, 11, 1);
 today.setHours(0, 0, 0, 0);
@@ -183,7 +184,7 @@ function isBetweenInclusive(date, start, end) {
 }
 
 function getPreviewRange() {
-  if (!startDate || endDate || !hoverDate) return null;
+  if (!startDate || !isSelecting || !hoverDate) return null;
   return normalizeRange(startDate, hoverDate);
 }
 
@@ -303,7 +304,7 @@ function renderMonthGrid() {
     btn.tabIndex = 0; // Make focusable
 
     btn.addEventListener("mouseenter", () => {
-      if (startDate && !endDate) {
+      if (isSelecting) {
         hoverDate = date;
         paintDayStates();
       }
@@ -379,7 +380,7 @@ function renderMonthGrid() {
           if (newBtn) {
               newBtn.focus();
               // Prevent default click-induced mouseenter bugs
-              if (!endDate) {
+              if (isSelecting) {
                  hoverDate = parseISODate(dateStr);
                  paintDayStates();
               }
@@ -396,7 +397,7 @@ function renderMonthGrid() {
         }, 10);
         
         // Update hoverDate for preview functionality if a start date is already selected
-        if (startDate && !endDate) {
+        if (isSelecting) {
           hoverDate = parseISODate(allDays[targetIndex].dataset.date);
           paintDayStates();
         }
@@ -425,7 +426,7 @@ function paintDayStates() {
     if (sameDate(date, startDate)) btn.classList.add("start");
     if (sameDate(date, endDate)) btn.classList.add("end");
 
-    if (startDate && endDate) {
+    if (!isSelecting && startDate && endDate) {
       if (isBetweenInclusive(date, startDate, endDate)) {
         btn.classList.add("in-range");
       }
@@ -459,6 +460,7 @@ function applyYearRange(year) {
   viewYear = year;
   viewMonth = 0;
   hoverDate = null;
+  isSelecting = false;
 
   setInputsFromState();
   renderCalendar();
@@ -477,6 +479,7 @@ function applyMonthRange(year, month) {
   viewYear = year;
   viewMonth = month;
   hoverDate = null;
+  isSelecting = false;
 
   setInputsFromState();
   renderCalendar();
@@ -498,6 +501,7 @@ function applyQuarterRange(year, quarterIndex) {
   viewYear = year;
   viewMonth = startMonth;
   hoverDate = null;
+  isSelecting = false;
 
   setInputsFromState();
   renderCalendar();
@@ -546,15 +550,17 @@ function selectDay(date) {
 
   date = normalizeDate(date);
 
-  if (!startDate || endDate) {
+  if (!isSelecting) {
     startDate = date;
-    endDate = null;
+    endDate = date;
     hoverDate = null;
+    isSelecting = true;
   } else {
     const range = normalizeRange(startDate, date);
     startDate = range.start;
     endDate = range.end;
     hoverDate = null;
+    isSelecting = false;
   }
 
   viewYear = date.getFullYear();
@@ -608,16 +614,19 @@ function applyTypedDates() {
     endDate = range.end;
     viewYear = startDate.getFullYear();
     viewMonth = startDate.getMonth();
+    isSelecting = false;
   } else if (startParsed && !endParsed) {
     startDate = startParsed;
-    endDate = null;
+    endDate = startParsed;
     viewYear = startDate.getFullYear();
     viewMonth = startDate.getMonth();
+    isSelecting = true;
   } else if (!startParsed && endParsed) {
-    startDate = null;
+    startDate = endParsed;
     endDate = endParsed;
     viewYear = endDate.getFullYear();
     viewMonth = endDate.getMonth();
+    isSelecting = false;
   }
 
   setInputsFromState();
@@ -693,7 +702,7 @@ function initCalendar() {
   });
 
   daysContainer.addEventListener("mouseleave", () => {
-    if (startDate && !endDate) {
+    if (isSelecting) {
       hoverDate = null;
       paintDayStates();
     }
@@ -703,6 +712,7 @@ function initCalendar() {
     startDate = null;
     endDate = null;
     hoverDate = null;
+    isSelecting = false;
     activePreset = "year";
     const periodTypeInput = document.getElementById("periodTypeInput");
     if (periodTypeInput) periodTypeInput.value = "year";
@@ -725,12 +735,8 @@ function initCalendar() {
       const allDays = Array.from(daysContainer.querySelectorAll(".day:not(.empty)"));
       if (allDays.length > 0) allDays[allDays.length - 1].focus(); // Focus last day
     } else if (e.key === "Enter" || e.key === " ") {
-      // Allow default button click handling
-      setTimeout(() => {
-        const cGroup = document.getElementById('comCode');
-        const cCheckboxes = cGroup ? Array.from(cGroup.querySelectorAll('input[type="checkbox"]')) : [];
-        if (cCheckboxes.length > 0) cCheckboxes[0].focus();
-      }, 50);
+      e.preventDefault();
+      clearBtn.click(); // Programmatically click the button to trigger clear logic
     }
   });
 
@@ -857,9 +863,12 @@ function initAdvancedKeyboardNav() {
   cCheckboxes.forEach((cb, i) => {
     cb.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowDown') {
+        e.preventDefault();
         if (i < cCheckboxes.length - 1) {
-          e.preventDefault();
           focusEl(cCheckboxes[i + 1]);
+        } else {
+          const getPdfBtn = document.getElementById("getPdfBtn");
+          if (getPdfBtn) focusEl(getPdfBtn);
         }
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
@@ -874,7 +883,47 @@ function initAdvancedKeyboardNav() {
       }
     });
   });
+
+  const getPdfBtn = document.getElementById("getPdfBtn");
+  const openPdfBtn = document.getElementById("openPdfBtn");
+
+  if (getPdfBtn) {
+    getPdfBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        if (cCheckboxes.length > 0) focusEl(cCheckboxes[cCheckboxes.length - 1]);
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        if (openPdfBtn) focusEl(openPdfBtn);
+      }
+    });
+  }
+
+  if (openPdfBtn) {
+    openPdfBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        if (getPdfBtn) focusEl(getPdfBtn);
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        if (rCheckboxes.length > 0) focusEl(rCheckboxes[0]);
+      }
+    });
+  }
 }
+
+// Global keyboard listener for initial focus
+document.addEventListener('keyup', (e) => {
+  // If no element is focused (or body is focused) and Enter is pressed,
+  // focus the first checkbox to start keyboard navigation
+  if (e.key === 'Enter' && (document.activeElement === document.body || !document.activeElement)) {
+    e.preventDefault();
+    const firstReportCheckbox = document.querySelector('#report input[type="checkbox"]');
+    if (firstReportCheckbox) {
+      firstReportCheckbox.focus();
+    }
+  }
+});
 
 // Initialize when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {

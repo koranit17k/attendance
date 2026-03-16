@@ -101,6 +101,14 @@ button:hover {
     font-weight: bold;
     flex: 1;
     max-width: 200px;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.btn-primary:focus-visible,
+.btn-primary:focus {
+    outline: 3px solid #0284c7;
+    outline-offset: 3px;
+    box-shadow: 0 0 8px rgba(2, 132, 199, 0.4);
 }
 
 /* Calendar Picker Styles */

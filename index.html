@@ -14,13 +14,13 @@
 
             <form id="form">
                 <div class="form-group">
-                    <label>Report Name</label>
+                    <label>รายงาน</label>
                     <div id="report" class="checkbox-group">
                         <label><input type="checkbox" name="report" value="A01"> 1 เช็คเวลาประจำวัน</label>
                         <label><input type="checkbox" name="report" value="A02"> 2 ตรวจสอบรายบุคคล</label>
-                        <label><input type="checkbox" name="report" value="A03"> 3</label>
-                        <label><input type="checkbox" name="report" value="A04"> 4</label>
-                        <label><input type="checkbox" name="report" value="A05"> 5</label>
+                        <label><input type="checkbox" name="report" value="A03"> 3 สรุปประจำเดือน</label>
+                        <label><input type="checkbox" name="report" value="A04"> 4 วิเคราะห์พนักงาน</label>
+                        <label><input type="checkbox" name="report" value="A05"> 5 วิเคราะห์บริษัท</label>
                     </div>
                 </div>
 
@@ -67,12 +67,12 @@
                     </div>
 
                     <div class="actions">
-                        <button type="button" class="btn-clear" id="clearBtn">ล้างค่า</button>
+                        <button type="button" class="btn-clear" id="clearBtn">Clear</button>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Company Name</label>
+                    <label>บริษัท</label>
                     <div id="comCode" class="checkbox-group">
                         <label><input type="checkbox" name="comCode" value="01"> 1 กี่หิ้น การไฟฟ้าภูเก็ต</label>
                         <label><input type="checkbox" name="comCode" value="02"> 2 บ้านสุขภัณฑ์และวัสดุ</label>
@@ -86,8 +86,8 @@
             </form>
 
             <div class="button-group">
-                <button class="btn-primary" onclick="getPDF()">getPDF</button>
-                <button class="btn-primary" onclick="openPDF()">openPDF</button>
+                <button type="button" class="btn-primary" id="getPdfBtn" onclick="getPDF()">getPDF</button>
+                <button type="button" class="btn-primary" id="openPdfBtn" onclick="openPDF()">openPDF</button>
             </div>
         </div>
 
