@@ -760,7 +760,7 @@ function initCalendar() {
 function initAdvancedKeyboardNav() {
   const rGroup = document.getElementById('report');
   const cGroup = document.getElementById('comCode');
-  const rCheckboxes = rGroup ? Array.from(rGroup.querySelectorAll('input[type="checkbox"]')) : [];
+  const rCheckboxes = rGroup ? Array.from(rGroup.querySelectorAll('input[type="radio"]')) : [];
   const cCheckboxes = cGroup ? Array.from(cGroup.querySelectorAll('input[type="checkbox"]')) : [];
 
   const sDate = document.getElementById("startDateInput");
@@ -918,7 +918,7 @@ document.addEventListener('keyup', (e) => {
   // focus the first checkbox to start keyboard navigation
   if (e.key === 'Enter' && (document.activeElement === document.body || !document.activeElement)) {
     e.preventDefault();
-    const firstReportCheckbox = document.querySelector('#report input[type="checkbox"]');
+    const firstReportCheckbox = document.querySelector('#report input[type="radio"]');
     if (firstReportCheckbox) {
       firstReportCheckbox.focus();
     }
