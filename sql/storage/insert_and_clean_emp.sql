@@ -36,7 +36,7 @@ END;
 UPDATE employee e
 SET e.timeCode = NULL
 WHERE e.timeCode IS NOT NULL
-  AND e.endDate IS NULL
+  AND e.endDate IS not NULL
   AND NOT EXISTS (
         SELECT 1
         FROM attendance a
